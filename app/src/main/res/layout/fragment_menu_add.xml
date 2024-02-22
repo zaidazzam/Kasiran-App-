@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical"
             android:paddingLeft="24dp"
@@ -27,7 +27,8 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_picture_empty" />
+                android:src="@drawable/ic_picture_empty"
+                android:contentDescription="@string/image_menu"/>
 
             <TextView
                 android:fontFamily="@font/poppins"
@@ -43,19 +44,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:background="@drawable/shape_rectangle_outline_8_020202"
-                android:hint="Masukan Nama"
+                android:hint="@string/masukan_nama"
                 android:textColor="@color/black"
-
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:inputType="text"/>
 
             <TextView
                 android:fontFamily="@font/poppins"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-
                 android:layout_marginTop="16dp"
-                android:text="Harga" />
+                android:text="@string/harga" />
 
             <EditText
                 android:id="@+id/edt_harga"
@@ -63,10 +63,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:background="@drawable/shape_rectangle_outline_8_020202"
-                android:hint="Masukan Harga"
+                android:hint="@string/masukkan_harga"
                 android:textColor="@color/black"
-
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:inputType="number"/>
 
             <TextView
                 android:fontFamily="@font/poppins"
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/black"
-                android:text="Stok" />
+                android:text="@string/stok" />
 
             <EditText
 
@@ -83,16 +83,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:background="@drawable/shape_rectangle_outline_8_020202"
-                android:hint="Masukan Stok"
+                android:hint="@string/masukan_stok"
                 android:textColor="@color/black"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:inputType="number"/>
             <TextView
                 android:fontFamily="@font/poppins"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/black"
-                android:text="Tipe" />
+                android:text="@string/tipe" />
 
             <Spinner
                 android:id="@+id/spinner_type"
@@ -101,7 +102,7 @@
                 android:layout_marginTop="6dp"
                 android:textColor="@color/black"
                 android:background="@drawable/shape_rectangle_outline_8_020202"
-                android:hint="Masukan Tipe"
+                android:hint="@string/masukan_tipe"
 
                 android:padding="10dp" />
             <TextView
@@ -110,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/black"
-                android:text="Deksripsi" />
+                android:text="@string/deksripsi" />
 
             <EditText
                 android:id="@+id/edt_decs"
@@ -119,19 +120,19 @@
                 android:layout_marginTop="6dp"
                 android:textColor="@color/black"
                 android:background="@drawable/shape_rectangle_outline_8_020202"
-                android:hint="Masukan Deksripsi"
-                android:padding="10dp" />
+                android:hint="@string/masukan_deksripsi"
+                android:padding="10dp"
+                android:inputType="text"/>
             <Button
                 android:id="@+id/btn_tambah"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/utama"
                 android:fontFamily="@font/poppins"
                 android:padding="8dp"
-                android:text="Tambah"
+                android:text="@string/tambah"
                 android:textStyle="bold"
                 android:textAllCaps="false"
                 android:textColor="@color/black" />

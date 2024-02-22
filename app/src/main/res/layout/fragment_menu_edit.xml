@@ -1,6 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    tools:context=".MenuAddFragment">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingTop="6dp"
+            android:paddingRight="24dp"
+            android:layout_marginBottom="120dp">
+
+            <ImageView
+                android:id="@+id/img_menu"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_picture_empty"
+                android:contentDescription="@string/image_menu"/>
+
+            <TextView
+                android:fontFamily="@font/poppins"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/black"
+                android:text="@string/nama" />
+
+            <EditText
+                android:id="@+id/edt_nama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/shape_rectangle_outline_8_020202"
+                android:hint="@string/masukan_nama"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:inputType="text"/>
+
+            <TextView
+                android:fontFamily="@font/poppins"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:text="@string/harga" />
+
+            <EditText
+                android:id="@+id/edt_harga"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/shape_rectangle_outline_8_020202"
+                android:hint="@string/masukkan_harga"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:inputType="number"/>
+
+            <TextView
+                android:fontFamily="@font/poppins"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/black"
+                android:text="@string/stok" />
+
+            <EditText
+
+                android:id="@+id/edt_stok"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/shape_rectangle_outline_8_020202"
+                android:hint="@string/masukan_stok"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:inputType="number"/>
+            <TextView
+                android:fontFamily="@font/poppins"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/black"
+                android:text="@string/tipe" />
+
+            <Spinner
+                android:id="@+id/spinner_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/black"
+                android:background="@drawable/shape_rectangle_outline_8_020202"
+                android:hint="@string/masukan_tipe"
+                android:padding="10dp" />
+            <TextView
+                android:fontFamily="@font/poppins"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/black"
+                android:text="@string/deskripsi" />
+
+            <EditText
+                android:id="@+id/edt_decs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/black"
+                android:background="@drawable/shape_rectangle_outline_8_020202"
+                android:hint="@string/masukan_deksripsi"
+                android:padding="10dp"
+                android:inputType="text"/>
+            <Button
+                android:id="@+id/btn_simpan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/utama"
+                android:fontFamily="@font/poppins"
+                android:padding="8dp"
+                android:text="@string/simpan"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:textColor="@color/black" />
+            <Button
+                android:id="@+id/btn_batal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"
+                android:fontFamily="@font/poppins"
+                android:padding="8dp"
+                android:text="@string/batal"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.core.widget.NestedScrollView>

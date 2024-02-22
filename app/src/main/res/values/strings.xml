@@ -27,6 +27,19 @@
     <string name="deskripsi">Makanan khas Bandung yang cukup sering dipesan oleh anak muda dengan pola makan yang cukup tinggi dengan mengutamakan diet yang sehat dan teratur.</string>
     <string name="nama">Nama</string>
     <string name="add_item_description">add</string>
+    <string name="masukkan_harga">Masukan Harga</string>
+    <string name="harga">Harga</string>
+    <string name="masukan_nama">Masukan Nama</string>
+    <string name="stok">Stok</string>
+    <string name="masukan_stok">Masukan Stok</string>
+    <string name="tipe">Tipe</string>
+    <string name="masukan_tipe">Masukan Tipe</string>
+    <string name="deksripsi">Deksripsi</string>
+    <string name="masukan_deksripsi">Masukan Deksripsi</string>
+    <string name="tambah">Tambah</string>
+    <string name="image_menu">Image Menu</string>
+    <string name="simpan">Simpan</string>
+    <string name="batal">Batal</string>
     <string-array name="tipe_options">
         <item>unit_stock</item>
         <item>daily_stock</item>
