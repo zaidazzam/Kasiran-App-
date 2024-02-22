@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_nav"
+    app:startDestination="@id/menuFragment">
+
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.bdi.kasiran.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu" />
+
+    <fragment
+        android:id="@+id/menuDetailFragment"
+        android:name="com.bdi.kasiran.ui.menu.MenuDetailFragment"
+        android:label="fragment_menu_detail"
+        tools:layout="@layout/fragment_menu_detail">
+    </fragment>
+
+    <fragment
+        android:id="@+id/menuAddFragment"
+        android:name="com.bdi.kasiran.MenuAddFragment"
+        android:label="fragment_add_menu"
+        tools:layout="@layout/fragment_menu_add" />
+
+    <fragment
+        android:id="@+id/menuOrderFragment"
+        android:name="com.bdi.kasiran.OrderFragment"
+        android:label="fragment_order"
+        tools:layout="@layout/fragment_order" />
+
+    <fragment
+        android:id="@+id/laporanFragment"
+        android:name="com.bdi.kasiran.LaporanFragment"
+        android:label="fragment_order"
+        tools:layout="@layout/fragment_laporan" />
+
+    <fragment
+        android:id="@+id/laporanDetailFragment"
+        android:name="com.bdi.kasiran.ui.laporan.LaporanDetailFragment"
+        android:label="fragment_order"
+        tools:layout="@layout/fragment_laporan_detail" />
+
+
+</navigation>
