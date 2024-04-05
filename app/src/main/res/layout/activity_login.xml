@@ -16,48 +16,48 @@
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/logokasiran"
-        android:layout_marginBottom="64dp"/>
+        android:layout_marginBottom="64dp"
+        app:srcCompat="@drawable/logokasiran" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
-        android:textColor="@color/black"
-        android:text="@string/email_address" />
+        android:text="@string/email_address"
+        android:textColor="@color/black" />
 
     <EditText
         android:id="@+id/edt_email"
-        android:fontFamily="@font/poppins"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:background="@drawable/shape_rectangle_outline_8_020202"
+        android:fontFamily="@font/poppins"
         android:hint="@string/type_your_email_address"
+        android:padding="10dp"
         android:textColor="@color/black"
-        android:textColorHint="#BF000000"
-        android:padding="10dp" />
+        android:textColorHint="#BF000000" />
 
     <TextView
-        android:fontFamily="@font/poppins"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textColor="@color/black"
-        android:text="Password" />
+        android:fontFamily="@font/poppins"
+        android:text="Password"
+        android:textColor="@color/black" />
 
     <EditText
         android:id="@+id/edt_password"
-        android:fontFamily="@font/poppins"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:background="@drawable/shape_rectangle_outline_8_020202"
+        android:fontFamily="@font/poppins"
         android:hint="@string/masukan_password"
         android:inputType="textPassword"
+        android:padding="10dp"
         android:textColor="@color/black"
-        android:textColorHint="#BF000000"
-        android:padding="10dp" />
+        android:textColorHint="#BF000000" />
 
     <Button
         android:id="@+id/btn_login"
@@ -68,10 +68,18 @@
         android:fontFamily="@font/poppins"
         android:padding="8dp"
         android:text="@string/login"
-        android:textSize="18dp"
         android:textAllCaps="false"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        android:textSize="18dp" />
 
+    <TextView
+        android:id="@+id/text_link_daftar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/daftar"
+        android:textAlignment="center"
+        android:textColor="@color/black" />
 
 
 </LinearLayout>

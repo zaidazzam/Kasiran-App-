@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/txtTanggalTransaksi"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="12dp"
@@ -41,13 +41,15 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textAlignment="center"
-            android:paddingTop="2dp"
-            android:paddingBottom="5dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/bg_shape2"
             android:backgroundTint="@color/yellow"
-            android:text="pending"
+            android:paddingTop="2dp"
+            android:paddingBottom="5dp"
+            android:text="@string/pending"
+            android:textAlignment="center"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtTransaksiTotal" />
@@ -57,7 +59,7 @@
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="8dp"
             android:paddingEnd="2dp"
             android:text="Rp. 0"
             android:textAlignment="textEnd"
@@ -78,13 +80,11 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="65dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/baseline_payment_24" />
+            app:srcCompat="@drawable/payment_logo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,13 +32,15 @@ class MenuFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_menu, container, false)
         recyclerView = view.findViewById(R.id.rcv_listmenu) // Initialize recyclerView here
         recyclerView.layoutManager = LinearLayoutManager(context)
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         getMenuData()
         val btnTambah = view.findViewById<FloatingActionButton>(R.id.btn_tambah)
         btnTambah.setOnClickListener {
-            Toast.makeText(activity?.applicationContext, "Click", Toast.LENGTH_LONG)
+            Toast.makeText(requireContext(), "Tambah Menu", Toast.LENGTH_LONG).show() // Fixed toast display
             findNavController().navigate(R.id.menuAddFragment)
         }
+
         return view
     }
 
@@ -49,18 +52,23 @@ class MenuFragment : Fragment() {
                 call: Call<MenuResponse>,
                 response: Response<MenuResponse>
             ) {
-                if (response.isSuccessful) {
-                    handleMenuDataResponse(response.body())
-                } else {
-                    Log.e("Error", "Failed to get menu data. Code: ${response.code()}")
+                if (isAdded) { // Check if Fragment is still added to its context
+                    if (response.isSuccessful) {
+                        handleMenuDataResponse(response.body())
+                    } else {
+                        Log.e("Error", "Failed to get menu data. Code: ${response.code()}")
+                    }
                 }
             }
 
             override fun onFailure(call: Call<MenuResponse>, t: Throwable) {
-                Log.e("Error", "Failed to get menu data", t)
+                if (isAdded) { // Check if Fragment is still added to its context
+                    Log.e("Error", "Failed to get menu data", t)
+                }
             }
         })
     }
+
 
     private fun handleMenuDataResponse(menuResponse: MenuResponse?) {
         if (menuResponse != null && menuResponse.success) {

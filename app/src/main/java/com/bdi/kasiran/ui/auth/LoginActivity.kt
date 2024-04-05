@@ -2,13 +2,16 @@ package com.bdi.kasiran.ui.auth
 
 import SessionManager
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bdi.kasiran.MainActivity
+import com.bdi.kasiran.R
 import com.bdi.kasiran.databinding.ActivityLoginBinding
 import com.bdi.kasiran.network.BaseRetrofit
 import com.bdi.kasiran.response.login.LoginResponse
@@ -31,11 +34,18 @@ class LoginActivity : AppCompatActivity() {
 
         sessionManager = SessionManager(this)
         val loginStatus = sessionManager.getBoolean("LOGIN_STATUS")
+
         if (loginStatus) {
             val moveIntent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(moveIntent)
             finish()
         }
+        val textViewDaftar: TextView = findViewById(R.id.text_link_daftar)
+        textViewDaftar.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/6288980077538"))
+            startActivity(intent)
+        }
+
 
         val btnLogin: Button = binding.btnLogin
         val txtEmail: EditText = binding.edtEmail

@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.195"
-            app:srcCompat="@drawable/baseline_menu_book_24" />
+            app:srcCompat="@drawable/sample_photo" />
 
     <TextView
         android:id="@+id/txt_nama"
@@ -59,7 +59,6 @@
         android:layout_marginStart="4dp"
         android:fontFamily="@font/poppins"
         android:text="@string/stok_menu"
-        android:textColor="#7C000000"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/txt_stok1"
         app:layout_constraintTop_toBottomOf="@+id/txt_harga" />
@@ -71,7 +70,6 @@
         android:layout_marginStart="12dp"
         android:fontFamily="@font/poppins"
         android:text="stok"
-        android:textColor="#7C000000"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/img_gambar"
         app:layout_constraintTop_toBottomOf="@+id/txt_harga" />

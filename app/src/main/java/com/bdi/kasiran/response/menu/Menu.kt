@@ -18,4 +18,5 @@ data class Menu(
     val created_by: String,
     val created_at: String,
     val updated_at: String,
+    val branch: Branch
 ): Parcelable

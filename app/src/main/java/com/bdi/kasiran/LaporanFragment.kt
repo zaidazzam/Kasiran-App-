@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.bdi.kasiran.ui.auth.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class LaporanFragment : Fragment() {
 
@@ -28,42 +30,44 @@ class LaporanFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_laporan, container, false)
         recyclerView = view.findViewById(R.id.rcv_listlaporan) // Initialize recyclerView here
         recyclerView.layoutManager = LinearLayoutManager(context)
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         getLaporanTransaksi()
         return view
     }
 
-    private fun getLaporanTransaksi(){
+    private fun getLaporanTransaksi() {
         val token = LoginActivity.sessionManager.getString("TOKEN")
         api.getOrder(token.toString()).enqueue(object : Callback<OrderResponse> {
             override fun onResponse(
                 call: Call<OrderResponse>,
                 response: Response<OrderResponse>
             ) {
-                if (response.isSuccessful) {
-                    handleOrderDataResponse(response.body())
-                } else {
-                    Log.e("Error", "Failed to get menu data. Code: ${response.code()}")
+                if (isAdded) { // Check if the Fragment is currently added to an Activity
+                    if (response.isSuccessful) {
+                        handleOrderDataResponse(response.body())
+                    } else {
+                        Log.e("Error", "Failed to get laporan data. Code: ${response.code()}")
+                    }
                 }
             }
 
             override fun onFailure(call: Call<OrderResponse>, t: Throwable) {
-                Log.e("Error", "Failed to get menu data", t)
+                if (isAdded) { // Ensure Fragment is attached before interacting with the context
+                    Log.e("Error", "Failed to get laporan data", t)
+                }
             }
         })
     }
+
     private fun handleOrderDataResponse(orderResponse: OrderResponse?) {
         if (orderResponse != null && orderResponse.success) {
             val orderList = orderResponse.data
             val rvAdapter = LaporanAdapter(orderList)
 
-            // Set adapter to RecyclerView
             recyclerView.adapter = rvAdapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext()) // Set layout manager
-
         } else {
-            // Handle the case when the response is not successful or data is null
-            Log.e("Error", "Failed to get menu data.")
+            Log.e("Error", "Failed to get laporan data.")
         }
     }
 

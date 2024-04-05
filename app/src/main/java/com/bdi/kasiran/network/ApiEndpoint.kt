@@ -1,4 +1,4 @@
-
+import com.bdi.kasiran.response.diskon.DiskonResponse
 import com.bdi.kasiran.response.login.LoginResponse
 import com.bdi.kasiran.response.menu.MenuResponse
 import com.bdi.kasiran.response.menu.MenuResponsePost
@@ -17,10 +17,13 @@ interface ApiEndpoint {
     ): Call<LoginResponse>
 
     @POST("menu")
-     fun getMenuData(@Header("Authorization") token: String): Call<MenuResponse>
+    fun getMenuData(@Header("Authorization") token: String): Call<MenuResponse>
 
     @DELETE("menu/{id}")
-    fun deleteMenu(@Header("Authorization") token: String, @Path("id") id: Int): Call<MenuResponsePost>
+    fun deleteMenu(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Call<MenuResponsePost>
 
     @Multipart
     @POST("menu/store")
@@ -34,6 +37,32 @@ interface ApiEndpoint {
         @Part menuImage: MultipartBody.Part // Gunakan anotasi @Part untuk pengunggahan berkas
     ): Call<MenuResponsePost>
 
+    @Multipart
+    @POST("menu/update/{id}")
+    fun editMenu(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Part("menu_name") menuName: RequestBody,
+        @Part("menu_price") menuPrice: RequestBody,
+        @Part("menu_qty") menuStok: RequestBody,
+        @Part("menu_type") menuType: RequestBody,
+        @Part("menu_desc") menuDecs: RequestBody,
+        @Part menuImage: MultipartBody.Part // Gunakan anotasi @Part untuk pengunggahan berkas
+    ): Call<MenuResponsePost>
+
     @POST("order")
     fun getOrder(@Header("Authorization") token: String): Call<OrderResponse>
+
+
+    @POST("diskon")
+    fun getDiskon(@Header("Authorization") token: String): Call<DiskonResponse>
+
+    @Multipart
+    @POST("menu/add-stock/{id}")
+    fun updateMenuStock(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Part("menu_qty") menuStok: RequestBody,
+    ): Call<MenuResponsePost>
+
 }

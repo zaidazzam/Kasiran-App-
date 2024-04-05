@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
@@ -37,13 +36,12 @@ class MenuAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<MenuAdapter.Vi
         numberFormat.setMaximumFractionDigits(0);
         holder.txtNamaMenu.text = menu.menu_name
         holder.txtHargaMenu.text = numberFormat.format(menu.menu_price.toDouble()).toString()
-//        holder.txtStok.text = numberFormat.format(menu.menu_qty.toDouble()).toString()
         holder.txtStok.text = menu.menu_qty
 
         // Load image into ImageView using Gliden
         Glide.with(holder.itemView.context)
             .load(menu.menu_image)
-            .apply(RequestOptions().placeholder(R.drawable.iv_sample_product)) // Placeholder image while loading
+            .apply(RequestOptions().placeholder(R.drawable.sample_photo)) // Placeholder image while loading
             .transition(DrawableTransitionOptions.withCrossFade()) // Smooth transition
             .into(holder.txtGambar)
 
@@ -95,6 +93,7 @@ class MenuAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<MenuAdapter.Vi
 
 
 //        val btnDelete = itemView.findViewById<ImageButton>(R.id.btnDeleteProduk)
-        val btnEdit = itemView.findViewById<ImageButton>(R.id.btnEditProduk)
+//        val btnEdit = itemView.findViewById<ImageButton>(R.id.btnEditProduk)
     }
+
 }

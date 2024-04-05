@@ -6,104 +6,144 @@
     android:layout_height="match_parent"
     tools:context=".ui.menu.MenuDetailFragment">
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/img_product_detail"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:src="@drawable/ic_launcher_background"
-                android:scaleType="fitCenter"/>
-
-            <TextView
-                android:id="@+id/price_product_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/harga_menu"
-                android:background="@drawable/bg_shape"
-                android:textSize="20sp"
-                android:layout_below="@id/img_product_detail"
-                android:textColor="@color/white"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:padding="4dp"
-                android:fontFamily="@font/poppins_semibold" />
+                android:layout_height="200dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_launcher_background" />
 
             <TextView
                 android:id="@+id/name_product_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/price_product_detail"
+                android:layout_below="@+id/img_product_detail"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/poppins_semibold"
                 android:text="@string/lengkapi_data_dibawah_ini"
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/desc_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name_product_detail"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/deskripsi" />
+            <!--Stok dan tipe-->
+            <TextView
                 android:id="@+id/tulisanstok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Stok:"
-                android:textSize="16sp"
-                android:layout_below="@id/name_product_detail"
-                android:fontFamily="@font/poppins_medium"
-                android:layout_marginStart="16dp"/>
+                android:layout_below="@id/desc_product"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/stok"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/stokmenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/name_product_detail"
+                android:layout_below="@id/desc_product"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
                 android:layout_toEndOf="@+id/tulisanstok"
                 android:fontFamily="@font/poppins_medium"
                 android:text="@string/stok_menu"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/add_stock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/desc_product"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
+                android:layout_toEndOf="@+id/stokmenu"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_edit_12" />
 
             <TextView
                 android:id="@+id/menu_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/stok_tersedia_8"
-                android:textSize="16sp"
+                android:layout_below="@id/desc_product"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@id/name_product_detail"
-                android:fontFamily="@font/poppins_medium"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="16dp"/>
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="12dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/stok_tersedia_8"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/name_product_detail"
+                android:layout_below="@id/desc_product"
                 android:layout_marginStart="4dp"
                 android:layout_toStartOf="@+id/menu_type"
-                android:fontFamily="@font/poppins_medium"
-                android:text="Tipe:"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/tipe"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/desc_product"
-                android:background="#14000000"
+            <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/menu_type"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="@font/poppins_medium"
-                android:text="@string/deskripsi" />
+                android:layout_height="1dp"
+                android:layout_below="@id/tipe"
+                android:layout_marginTop="8dp"
+                android:background="@color/abu" />
 
+            <TextView
+                android:id="@+id/price_product_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/harga_menu"
+                android:textSize="20sp" />
         </RelativeLayout>
-    </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="12dp"
+            android:backgroundTint="@color/utama"
+            android:contentDescription="@string/add_item_description"
+            android:src="@drawable/baseline_edit_24"
+            android:tint="@color/white"
+            app:fabSize="mini"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
 </RelativeLayout>

@@ -3,44 +3,79 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_nav"
-    app:startDestination="@id/menuFragment">
+    app:startDestination="@id/menuOrderFragment">
 
     <fragment
         android:id="@+id/menuFragment"
+        android:label="Daftar Menu"
         android:name="com.bdi.kasiran.MenuFragment"
-        android:label="fragment_menu"
         tools:layout="@layout/fragment_menu" />
 
     <fragment
         android:id="@+id/menuDetailFragment"
+        tools:layout="@layout/fragment_menu_detail"
         android:name="com.bdi.kasiran.ui.menu.MenuDetailFragment"
-        android:label="fragment_menu_detail"
-        tools:layout="@layout/fragment_menu_detail">
+        android:label="Detail Menu">
+        <action
+            android:id="@+id/action_menuDetailFragment_to_menuEditFragment"
+            app:destination="@id/menuEditFragment" />
+        <action
+            android:id="@+id/action_menunuDetailFragment_to_menuAddStokFragment"
+            app:destination="@id/menuAddStokFragment" />
+        <argument
+            android:name="menuUuid"
+            app:argType="string" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/menuEditFragment"
+        android:name="com.bdi.kasiran.ui.menu.MenuEditFragment"
+        android:label="Edit Menu"
+        tools:layout="@layout/fragment_menu_edit">
+        <argument
+            android:name="menuUuid"
+            app:argType="string" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/menuAddStokFragment"
+        android:name="com.bdi.kasiran.ui.menu.MenuAddStokFragment"
+        android:label="Tambah Stok"
+        tools:layout="@layout/fragment_menu_add_stok">
+        <argument
+            android:name="menuUuid"
+            app:argType="string" />
+
     </fragment>
 
     <fragment
         android:id="@+id/menuAddFragment"
         android:name="com.bdi.kasiran.MenuAddFragment"
-        android:label="fragment_add_menu"
+        android:label="Tambah Menu"
         tools:layout="@layout/fragment_menu_add" />
 
     <fragment
         android:id="@+id/menuOrderFragment"
         android:name="com.bdi.kasiran.OrderFragment"
-        android:label="fragment_order"
+        android:label="Order Menu"
         tools:layout="@layout/fragment_order" />
 
     <fragment
         android:id="@+id/laporanFragment"
+        android:label="Riwayat Order"
         android:name="com.bdi.kasiran.LaporanFragment"
-        android:label="fragment_order"
         tools:layout="@layout/fragment_laporan" />
 
     <fragment
         android:id="@+id/laporanDetailFragment"
         android:name="com.bdi.kasiran.ui.laporan.LaporanDetailFragment"
-        android:label="fragment_order"
+        android:label="Detail Transaksi"
         tools:layout="@layout/fragment_laporan_detail" />
 
-
+    <fragment
+        android:id="@+id/diskonFragment"
+        android:label="Daftar Diskon"
+        android:name="com.bdi.kasiran.DiskonFragment"
+        tools:layout="@layout/fragment_diskon" />
 </navigation>

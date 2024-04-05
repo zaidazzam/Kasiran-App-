@@ -1,12 +1,16 @@
 package com.bdi.kasiran.ui.laporan
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.R
+import com.bdi.kasiran.adapter.LaporanDetailAdapter
 import com.bdi.kasiran.response.order.Order
 
 class LaporanDetailFragment : Fragment() {
@@ -17,28 +21,35 @@ class LaporanDetailFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_laporan_detail, container, false)
         val args = arguments
+        var order: Order? = null
+
         if (args != null) {
-            val order = args.getParcelable<Order>("transaksi")
+            order = args.getParcelable<Order>("transaksi")
             if (order != null) {
-                displayMenuDetails(view, order)
+                displayOrderDetails(view, order)
             }
         }
+
+        if (order?.status == "completed") {
+            view.findViewById<Button>(R.id.btn_cancel).visibility = View.GONE
+            view.findViewById<Button>(R.id.btn_complete).visibility = View.GONE
+        }
+        val recyclerView: RecyclerView = view.findViewById(R.id.rcv_detail_Laporan)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        if (order != null) {
+            recyclerView.adapter = LaporanDetailAdapter(order.order_list)
+        }
+
         return view
     }
 
-    private fun displayMenuDetails(view: View, order: Order) {
-        // Periksa ID TextView yang digunakan
-        Log.d("MenuDetailFragment", "Menu Name: ${order.order_no}")
-
-//        view.findViewById<TextView>(R.id.name_product_detail).text = menu.menu_name
-//        view.findViewById<TextView>(R.id.price_product_detail).text = menu.menu_price
-//        view.findViewById<TextView>(R.id.stokmenu).text = menu.menu_qty
-//        view.findViewById<TextView>(R.id.menu_type).text = menu.menu_type
-//        view.findViewById<TextView>(R.id.desc_product).text = menu.menu_desc
-//
-//        // Load image into ImageView using Glide
-//        Glide.with(view)
-//            .load(menu.menu_image)
-//            .into(view.findViewById<ImageView>(R.id.img_product_detail))
+    private fun displayOrderDetails(view: View, order: Order) {
+        view.findViewById<TextView>(R.id.txt_invoice).text = order.order_no
+        view.findViewById<TextView>(R.id.txt_metode_pembayaran).text = order.payment_type
+        view.findViewById<TextView>(R.id.status_order).text = order.status
+        view.findViewById<TextView>(R.id.hasil_tgl_order).text = order.updated_at
+        view.findViewById<TextView>(R.id.txt_diskon).text = order.total_diskon?.toString() ?: "0"
+        view.findViewById<TextView>(R.id.hasil_total_order).text = order.total_transaksi.toString()
+        view.findViewById<TextView>(R.id.hasil_order_note).text = order.order_note
     }
 }
