@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bgkasiran"
     android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingTop="32dp"
@@ -23,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
-        android:text="@string/email_address"
-        android:textColor="@color/black" />
+        android:text="@string/email_address" />
 
     <EditText
         android:id="@+id/edt_email"
@@ -34,17 +32,14 @@
         android:background="@drawable/shape_rectangle_outline_8_020202"
         android:fontFamily="@font/poppins"
         android:hint="@string/type_your_email_address"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:textColorHint="#BF000000" />
+        android:padding="10dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins"
-        android:text="Password"
-        android:textColor="@color/black" />
+        android:text="Password" />
 
     <EditText
         android:id="@+id/edt_password"
@@ -55,9 +50,7 @@
         android:fontFamily="@font/poppins"
         android:hint="@string/masukan_password"
         android:inputType="textPassword"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:textColorHint="#BF000000" />
+        android:padding="10dp" />
 
     <Button
         android:id="@+id/btn_login"
@@ -69,7 +62,6 @@
         android:padding="8dp"
         android:text="@string/login"
         android:textAllCaps="false"
-        android:textColor="@color/black"
         android:textSize="18dp" />
 
     <TextView
@@ -78,8 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:text="@string/daftar"
-        android:textAlignment="center"
-        android:textColor="@color/black" />
+        android:textAlignment="center" />
 
 
 </LinearLayout>

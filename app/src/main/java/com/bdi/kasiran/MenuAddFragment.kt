@@ -86,7 +86,6 @@
 
         private fun tambahMenu(namaMenu: String, hargaMenu: String, stokMenu: String, typeMenu: String, descMenu: String) {
             val token = LoginActivity.sessionManager.getString("TOKEN")
-
             token?.let {
                 if (isValidImageType(imageFile)) {
                     val imageRequestBody: RequestBody? = imageFile?.asRequestBody("file/*".toMediaTypeOrNull())

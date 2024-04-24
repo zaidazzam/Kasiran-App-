@@ -80,7 +80,7 @@
 
         implementation 'com.google.code.gson:gson:2.10.1'
         // Define a BOM and its version
-        implementation platform("com.squareup.okhttp3:okhttp-bom:4.9.3")
+        implementation platform("com.squareup.okhttp3:okhttp-bom:4.10.0")
 
         // Define any required OkHttp artifacts without version
         implementation("com.squareup.okhttp3:okhttp")

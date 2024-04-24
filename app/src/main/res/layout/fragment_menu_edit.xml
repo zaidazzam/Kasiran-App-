@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,22 +6,10 @@
     android:fillViewport="true"
     android:orientation="vertical"
     tools:context=".ui.menu.MenuEditFragment">
-=======
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:fillViewport="true"
-    android:orientation="vertical"
-    tools:context=".MenuAddFragment">
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-<<<<<<< HEAD
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,24 +19,12 @@
             android:paddingLeft="24dp"
             android:paddingTop="6dp"
             android:paddingRight="24dp">
-=======
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:paddingLeft="24dp"
-            android:paddingTop="6dp"
-            android:paddingRight="24dp"
-            android:layout_marginBottom="120dp">
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
 
             <ImageView
                 android:id="@+id/img_menu"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center"
-<<<<<<< HEAD
                 android:contentDescription="@string/image_menu"
                 android:src="@drawable/ic_picture_empty" />
 
@@ -58,17 +33,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/poppins"
-=======
-                android:src="@drawable/ic_picture_empty"
-                android:contentDescription="@string/image_menu"/>
-
-            <TextView
-                android:fontFamily="@font/poppins"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/black"
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
                 android:text="@string/nama" />
 
             <EditText
@@ -78,7 +42,6 @@
                 android:layout_marginTop="6dp"
                 android:background="@drawable/shape_rectangle_outline_8_020202"
                 android:hint="@string/masukan_nama"
-<<<<<<< HEAD
                 android:inputType="text"
                 android:padding="10dp" />
 
@@ -87,18 +50,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/poppins"
-=======
-                android:textColor="@color/black"
-                android:padding="10dp"
-                android:inputType="text"/>
-
-            <TextView
-                android:fontFamily="@font/poppins"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:layout_marginTop="16dp"
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
                 android:text="@string/harga" />
 
             <EditText
@@ -108,7 +59,6 @@
                 android:layout_marginTop="6dp"
                 android:background="@drawable/shape_rectangle_outline_8_020202"
                 android:hint="@string/masukkan_harga"
-<<<<<<< HEAD
                 android:inputType="number"
                 android:padding="10dp"/>
 
@@ -117,18 +67,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/poppins"
-=======
-                android:textColor="@color/black"
-                android:padding="10dp"
-                android:inputType="number"/>
-
-            <TextView
-                android:fontFamily="@font/poppins"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/black"
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
                 android:text="@string/stok" />
 
             <EditText
@@ -139,7 +77,6 @@
                 android:layout_marginTop="6dp"
                 android:background="@drawable/shape_rectangle_outline_8_020202"
                 android:hint="@string/masukan_stok"
-<<<<<<< HEAD
                 android:inputType="number"
                 android:padding="10dp" />
 
@@ -149,25 +86,12 @@
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/poppins"
                 android:text="@string/tipe"/>
-=======
-                android:textColor="@color/black"
-                android:padding="10dp"
-                android:inputType="number"/>
-            <TextView
-                android:fontFamily="@font/poppins"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/black"
-                android:text="@string/tipe" />
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
 
             <Spinner
                 android:id="@+id/spinner_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-<<<<<<< HEAD
                 android:background="@drawable/shape_rectangle_outline_8_020202"
                 android:hint="@string/masukan_tipe"
                 android:padding="10dp"/>
@@ -178,26 +102,12 @@
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/poppins"
                 android:text="@string/deksripsi"/>
-=======
-                android:textColor="@color/black"
-                android:background="@drawable/shape_rectangle_outline_8_020202"
-                android:hint="@string/masukan_tipe"
-                android:padding="10dp" />
-            <TextView
-                android:fontFamily="@font/poppins"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/black"
-                android:text="@string/deksripsi" />
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
 
             <EditText
                 android:id="@+id/edt_decs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-<<<<<<< HEAD
                 android:background="@drawable/shape_rectangle_outline_8_020202"
                 android:hint="@string/masukan_deksripsi"
                 android:inputType="text"
@@ -237,36 +147,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-=======
-                android:textColor="@color/black"
-                android:background="@drawable/shape_rectangle_outline_8_020202"
-                android:hint="@string/masukan_deksripsi"
-                android:padding="10dp"
-                android:inputType="text"/>
-            <Button
-                android:id="@+id/btn_simpan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="@color/utama"
-                android:fontFamily="@font/poppins"
-                android:padding="8dp"
-                android:text="@string/simpan"
-                android:textStyle="bold"
-                android:textAllCaps="false"
-                android:textColor="@color/black" />
-            <Button
-                android:id="@+id/btn_batal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/red"
-                android:fontFamily="@font/poppins"
-                android:padding="8dp"
-                android:text="@string/batal"
-                android:textStyle="bold"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
         </LinearLayout>
     </ScrollView>
 

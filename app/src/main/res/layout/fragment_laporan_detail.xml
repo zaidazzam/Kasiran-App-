@@ -34,42 +34,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-<<<<<<< HEAD
                 android:layout_marginTop="8dp"
                 android:text="Nomor Order"
-=======
-                android:layout_marginTop="16dp"
-                android:text="Detail Order"
-                android:textSize="20sp"
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:textStyle="bold"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
-<<<<<<< HEAD
-=======
-            <ImageView
-                android:id="@+id/img_poster"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="12dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/iv_sample_product"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                android:text="Nomor Order"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_poster" />
-
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
             <TextView
                 android:id="@+id/txt_name_item"
                 android:layout_width="wrap_content"
@@ -113,25 +82,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tanggal_order" />
 
             <TextView
-<<<<<<< HEAD
                 android:id="@+id/total_trasaksi"
-=======
-                android:id="@+id/textView12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="16dp"
-                android:text="Total Transaksi"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView11"/>
-
-
-
-            <TextView
-                android:id="@+id/txt_title"
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -152,32 +103,7 @@
 
 
             <TextView
-<<<<<<< HEAD
                 android:id="@+id/txt_invoice"
-=======
-                android:id="@+id/txt_items"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:text="1 items"
-                app:layout_constraintBottom_toBottomOf="@+id/img_poster"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/img_poster" />
-
-            <TextView
-                android:id="@+id/txt_invoice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="24dp"
-                android:text="xyzabcdefg"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_poster"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/txt_harga"
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -185,7 +111,6 @@
                 android:text="xyzabcdefg"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-<<<<<<< HEAD
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -200,47 +125,10 @@
 
             <TextView
                 android:id="@+id/status_order"
-=======
-                app:layout_constraintTop_toBottomOf="@+id/textView1" />
-
-            <TextView
-                android:id="@+id/txt_driver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="24dp"
-                android:text="IDR 5.000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_harga" />
-
-            <TextView
-                android:id="@+id/txt_tax"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="24dp"
-                android:text="IDR 2.000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_driver" />
-
-            <TextView
-                android:id="@+id/txt_diskon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="24dp"
-                android:text="IDR 30.000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_tax" />
-
-            <TextView
-                android:id="@+id/txt_total"
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="24dp"
-<<<<<<< HEAD
                 android:text="@string/pending"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_metode_pembayaran" />
@@ -264,11 +152,6 @@
                 android:text="@string/total_diskon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hasil_tgl_order" />
-=======
-                android:text="IDR 130.000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_diskon" />
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
 
             <TextView
                 android:id="@+id/hasil_total_order"
@@ -339,55 +222,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/btn_complete" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-<<<<<<< HEAD
-=======
-        <Button
-            android:id="@+id/btn_checkout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="24dp"
-            android:backgroundTint="#00B860"
-            android:fontFamily="@font/poppins"
-            android:padding="6dp"
-            android:text="Complete Order"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/const_layout" />
-
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:backgroundTint="@color/red"
-            android:fontFamily="@font/poppins"
-            android:padding="6dp"
-            android:text="Cancel Order"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_checkout" />
-
-        <Button
-            android:id="@+id/btn_download"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:backgroundTint="@color/utama"
-            android:fontFamily="@font/poppins"
-            android:padding="6dp"
-            android:text="Download Bill"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_cancel" />
->>>>>>> 5ba0d499fe8d743f0239f0de3310a1bd9805bd96
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

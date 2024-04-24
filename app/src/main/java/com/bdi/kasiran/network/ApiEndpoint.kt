@@ -2,6 +2,7 @@ import com.bdi.kasiran.response.diskon.DiskonResponse
 import com.bdi.kasiran.response.login.LoginResponse
 import com.bdi.kasiran.response.menu.MenuResponse
 import com.bdi.kasiran.response.menu.MenuResponsePost
+import com.bdi.kasiran.response.order.OrderCompleteResponse
 import com.bdi.kasiran.response.order.OrderResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -65,4 +66,9 @@ interface ApiEndpoint {
         @Part("menu_qty") menuStok: RequestBody,
     ): Call<MenuResponsePost>
 
+    @POST("order/complete")
+    fun getCompleteOrder(
+        @Header("Authorization") token: String,
+        @Path("id_order") id: String,
+    ): Call<OrderCompleteResponse>
 }
