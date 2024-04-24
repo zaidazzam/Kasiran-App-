@@ -1,5 +1,6 @@
 package com.bdi.kasiran
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.adapter.OrderAdapter
 import com.bdi.kasiran.network.BaseRetrofit
 import com.bdi.kasiran.response.cart.Cart
+import com.bdi.kasiran.response.menu.Menu
 import com.bdi.kasiran.response.menu.MenuResponse
 import com.bdi.kasiran.ui.auth.LoginActivity
 import retrofit2.Call
@@ -22,80 +25,52 @@ import retrofit2.Response
 import java.text.NumberFormat
 import java.util.Locale
 
-class OrderFragment : Fragment(), CallBackInterface {
+class OrderFragment : Fragment() {
     private val api by lazy { BaseRetrofit().endpoint }
-    private lateinit var myCart: ArrayList<Cart>
+    private lateinit var viewModel: OrderViewModel
     private lateinit var totalBayar: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_order, container, false)
-
-        getTransaksi(view)
-        simpanTransaksi(view)
-
-        return view
+        return inflater.inflate(R.layout.fragment_order, container, false)
     }
 
-    fun getTransaksi(view: View) {
-        val token = LoginActivity.sessionManager.getString("TOKEN")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        api.getMenuData(token.toString()).enqueue(object : Callback<MenuResponse> {
-            override fun onResponse(
-                call: Call<MenuResponse>,
-                response: Response<MenuResponse>
-            ) {
-                Log.d("TransaksiData", response.body().toString())
+        viewModel = ViewModelProvider(this)[OrderViewModel::class.java]
 
-//                val txtTotalProduk = view.findViewById<TextView>(R.id.txtTotalProduk)
-                val rvTransaksi = view.findViewById<RecyclerView>(R.id.rcv_listmenuorder)
+        viewModel.getTransaksi(api, view, activity).observe(viewLifecycleOwner) { data ->
+            val btnBayar = view.findViewById<Button>(R.id.btnBayar)
+            btnBayar.setOnClickListener{
+                val bundle = Bundle()
+                bundle.putParcelableArrayList(CART_DATA, data)
+                bundle.putString(TOTAL, totalBayar)
 
-//                txtTotalProduk.text = response.body()!!.data.produk.size.toString()+" Item"
-
-                rvTransaksi.setHasFixedSize(true)
-                rvTransaksi.layoutManager = LinearLayoutManager(activity)
-                val rvAdapter = OrderAdapter(response.body()!!.data)
-                rvTransaksi.adapter = rvAdapter
-
-                rvAdapter.callBackInterface = object : CallBackInterface{
-                    override fun passResultCallback(total: String, cart: ArrayList<Cart>) {
-                        val txtTotalBayar = activity?.findViewById<TextView>(R.id.txtTotalPembayaran)
-                        val localeID = Locale("in", "ID")
-                        val numberFormat = NumberFormat.getCurrencyInstance(localeID)
-                        numberFormat.setMaximumFractionDigits(0);
-
-                        txtTotalBayar?.setText(numberFormat.format(total.toDouble()).toString())
-                        totalBayar = total
-                        myCart = cart
-
-                        Log.d("myCart", cart.toString())
-                    }
-
-                }
+                findNavController().navigate(R.id.confirmOrderFragment, bundle)
             }
+        }
 
-            override fun onFailure(call: Call<MenuResponse>, t: Throwable) {
-                Log.e("Error", t.toString())
-            }
+        viewModel.totalPrice.observe(viewLifecycleOwner) {
+            totalBayar = it
+            val txtTotalBayar = view.findViewById<TextView>(R.id.txtTotalPembayaran)
+            val localeID = Locale("in", "ID")
+            val numberFormat = NumberFormat.getCurrencyInstance(localeID)
+            numberFormat.setMaximumFractionDigits(0);
 
-        })
-    }
-
-    fun simpanTransaksi(view: View) {
-        val btnBayar = view.findViewById<Button>(R.id.btnBayar)
-        btnBayar.setOnClickListener{
-            val bundle = Bundle()
-            bundle.putParcelableArrayList("myCart", myCart)
-            bundle.putString("TOTAL", totalBayar )
-
-            findNavController().navigate(R.id.menuAddFragment, bundle)
+            txtTotalBayar?.text = numberFormat.format(it.toDouble()).toString()
         }
     }
 
-    override fun passResultCallback(total: String, cart: ArrayList<Cart>) {
-        TODO("Not yet implemented")
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.totalPrice.value = 0.toString()
+    }
+
+    companion object {
+        const val TOTAL = "TOTAL"
+        const val CART_DATA = "MY CART"
     }
 }

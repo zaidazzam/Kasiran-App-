@@ -78,4 +78,10 @@
         android:label="Daftar Diskon"
         android:name="com.bdi.kasiran.DiskonFragment"
         tools:layout="@layout/fragment_diskon" />
+
+    <fragment
+        android:id="@+id/confirmOrderFragment"
+        android:name="com.bdi.kasiran.ConfirmOrderFragment"
+        android:label="ConfirmOrderFragment"
+        tools:layout="@layout/fragment_confirm_order"/>
 </navigation>

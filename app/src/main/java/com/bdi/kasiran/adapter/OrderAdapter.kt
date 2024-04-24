@@ -73,7 +73,7 @@ class OrderAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<OrderAdapter.
                 if (index != -1) {
                     cart[index].qty += 1
                 } else {
-                    val itemCart = Cart(menu.menu_uuid, menu.menu_price.toDouble(), 1)
+                    val itemCart = Cart(menu.menu_uuid, menu.menu_name, menu.menu_price.toDouble(), 1)
                     cart.add(itemCart)
                 }
             }

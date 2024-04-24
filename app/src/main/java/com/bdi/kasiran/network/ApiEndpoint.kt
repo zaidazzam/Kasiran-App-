@@ -4,6 +4,7 @@ import com.bdi.kasiran.response.menu.MenuResponse
 import com.bdi.kasiran.response.menu.MenuResponsePost
 import com.bdi.kasiran.response.order.OrderCompleteResponse
 import com.bdi.kasiran.response.order.OrderResponse
+import com.bdi.kasiran.response.order.OrderStore
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -70,5 +71,11 @@ interface ApiEndpoint {
     fun getCompleteOrder(
         @Header("Authorization") token: String,
         @Path("id_order") id: String,
+    ): Call<OrderCompleteResponse>
+
+    @POST("order/store")
+    fun storeOrder(
+        @Header("Authorization") token: String,
+        @Body order: OrderStore,
     ): Call<OrderCompleteResponse>
 }
