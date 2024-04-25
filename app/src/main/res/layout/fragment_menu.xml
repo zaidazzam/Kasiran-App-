@@ -1,38 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MenuFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/tv_no_data"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tidak ada data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/il_search_menu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:iconifiedByDefault="false"
+        app:boxCornerRadiusBottomEnd="36dp"
+        app:boxCornerRadiusBottomStart="36dp"
+        app:boxCornerRadiusTopEnd="36dp"
+        app:boxCornerRadiusTopStart="36dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/baseline_search_24">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcv_listmenu"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ed_search_menu"
             android:layout_width="match_parent"
-            android:layout_height="680dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_menu" />
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_tambah"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:backgroundTint="@color/utama"
-            android:contentDescription="@string/add_item_description"
-            android:src="@drawable/baseline_add_24"
-            android:tint="@color/white"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_listmenu"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/il_search_menu"
+        tools:listitem="@layout/item_menu" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_tambah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/utama"
+        android:contentDescription="@string/add_item_description"
+        android:src="@drawable/baseline_add_24"
+        android:tint="@color/white"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

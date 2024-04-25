@@ -1,87 +1,97 @@
 package com.bdi.kasiran
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.adapter.MenuAdapter
+import com.bdi.kasiran.databinding.FragmentMenuBinding
 import com.bdi.kasiran.network.BaseRetrofit
-import com.bdi.kasiran.response.menu.MenuResponse
-import com.bdi.kasiran.ui.auth.LoginActivity.Companion.sessionManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.bdi.kasiran.response.menu.Menu
+import com.google.android.material.textfield.TextInputLayout
 
 class MenuFragment : Fragment() {
 
     private val api by lazy { BaseRetrofit().endpoint }
-    private lateinit var recyclerView: RecyclerView  // Tambahkan ini
+    private val viewModel: OrderViewModel by viewModels()
+    private lateinit var binding: FragmentMenuBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_menu, container, false)
-        recyclerView = view.findViewById(R.id.rcv_listmenu) // Initialize recyclerView here
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    ): View {
+        binding = FragmentMenuBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        getMenuData()
-        val btnTambah = view.findViewById<FloatingActionButton>(R.id.btn_tambah)
-        btnTambah.setOnClickListener {
-            Toast.makeText(requireContext(), "Tambah Menu", Toast.LENGTH_LONG).show() // Fixed toast display
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getMenuData(api).observe(viewLifecycleOwner) { data ->
+            setItemData(data)
+            setUpSearch(data)
+        }
+
+        binding.btnTambah.setOnClickListener {
+            Toast.makeText(requireContext(), "Tambah Menu", Toast.LENGTH_LONG)
+                .show() // Fixed toast display
             findNavController().navigate(R.id.menuAddFragment)
         }
-
-        return view
     }
 
-    private fun getMenuData() {
-        val token = sessionManager.getString("TOKEN")
+    private fun setItemData(data: List<Menu>) {
+        val rvTransaksi = binding.rcvListmenu
+        rvTransaksi.setHasFixedSize(true)
+        rvTransaksi.layoutManager = LinearLayoutManager(activity)
+        val rvAdapter = MenuAdapter(data)
+        rvTransaksi.adapter = rvAdapter
+    }
 
-        api.getMenuData(token.toString()).enqueue(object : Callback<MenuResponse> {
-            override fun onResponse(
-                call: Call<MenuResponse>,
-                response: Response<MenuResponse>
-            ) {
-                if (isAdded) { // Check if Fragment is still added to its context
-                    if (response.isSuccessful) {
-                        handleMenuDataResponse(response.body())
+    private fun setUpSearch(allMenu: List<Menu>) {
+        binding.edSearchMenu
+            .addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (s.isNullOrEmpty()) {
+                        binding.ilSearchMenu.endIconMode = TextInputLayout.END_ICON_NONE
+                        setItemData(allMenu)
                     } else {
-                        Log.e("Error", "Failed to get menu data. Code: ${response.code()}")
+                        binding.ilSearchMenu.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
+                        viewModel.search(api, s.toString()).observe(viewLifecycleOwner) { newList ->
+                            if (newList.isNotEmpty()) {
+                                setItemData(newList)
+                            } else {
+                                binding.rcvListmenu.visibility = View.INVISIBLE
+                                binding.tvNoData.visibility = View.VISIBLE
+                            }
+                        }
                     }
+                    binding.rcvListmenu.visibility = View.VISIBLE
+                    binding.tvNoData.visibility = View.GONE
                 }
-            }
 
-            override fun onFailure(call: Call<MenuResponse>, t: Throwable) {
-                if (isAdded) { // Check if Fragment is still added to its context
-                    Log.e("Error", "Failed to get menu data", t)
+                override fun afterTextChanged(s: Editable?) {
                 }
-            }
-        })
+            })
     }
 
-
-    private fun handleMenuDataResponse(menuResponse: MenuResponse?) {
-        if (menuResponse != null && menuResponse.success) {
-            val menuList = menuResponse.data
-            val rvAdapter = MenuAdapter(menuList)
-
-            // Set adapter to RecyclerView
-            recyclerView.adapter = rvAdapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext()) // Set layout manager
-
-        } else {
-            // Handle the case when the response is not successful or data is null
-            Log.e("Error", "Failed to get menu data.")
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.edSearchMenu.text = null
     }
 }

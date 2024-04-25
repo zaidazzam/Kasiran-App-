@@ -21,6 +21,13 @@ interface ApiEndpoint {
     @POST("menu")
     fun getMenuData(@Header("Authorization") token: String): Call<MenuResponse>
 
+    @FormUrlEncoded
+    @POST("menu")
+    fun searchMenu(
+        @Header("Authorization") token: String,
+        @Field("s") key: String,
+    ): Call<MenuResponse>
+
     @DELETE("menu/{id}")
     fun deleteMenu(
         @Header("Authorization") token: String,
@@ -67,10 +74,18 @@ interface ApiEndpoint {
         @Part("menu_qty") menuStok: RequestBody,
     ): Call<MenuResponsePost>
 
+    @FormUrlEncoded
     @POST("order/complete")
     fun getCompleteOrder(
         @Header("Authorization") token: String,
-        @Path("id_order") id: String,
+        @Field("id_order") id: String,
+    ): Call<OrderCompleteResponse>
+
+    @FormUrlEncoded
+    @POST("order/cancel")
+    fun cancelOrder(
+        @Header("Authorization") token: String,
+        @Field("id_order") id: String,
     ): Call<OrderCompleteResponse>
 
     @POST("order/store")
