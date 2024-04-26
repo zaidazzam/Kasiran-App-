@@ -9,48 +9,34 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        app:labelVisibilityMode="unlabeled"
         android:layout_height="wrap_content"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            app:labelVisibilityMode="unlabeled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/utama"
-            app:titleTextColor="@color/white"
-            android:minHeight="?attr/actionBarSize">
+            android:minHeight="?attr/actionBarSize"
+            app:labelVisibilityMode="unlabeled"
+            app:titleTextColor="@color/white">
 
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+    <fragment
+        android:id="@+id/nav_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:layout_constraintVertical_bias="0.0">
-
-        <fragment
-            android:id="@+id/nav_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:defaultNavHost="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:navGraph="@navigation/bottom_nav" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:navGraph="@navigation/bottom_nav" />
 
     <View
         android:id="@+id/view"
@@ -74,8 +60,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav"
         tools:ignore="NotSibling" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

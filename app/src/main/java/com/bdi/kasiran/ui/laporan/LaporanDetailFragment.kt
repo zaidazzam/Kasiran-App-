@@ -1,5 +1,10 @@
 package com.bdi.kasiran.ui.laporan
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,22 +20,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.R
 import com.bdi.kasiran.adapter.LaporanDetailAdapter
 import com.bdi.kasiran.network.BaseRetrofit
-import com.bdi.kasiran.response.menu.MenuResponsePost
 import com.bdi.kasiran.response.order.Order
 import com.bdi.kasiran.response.order.OrderCompleteResponse
 import com.bdi.kasiran.ui.auth.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
 class LaporanDetailFragment : Fragment() {
     private val api by lazy { BaseRetrofit().endpoint }  // Make sure this instance correctly provides your ApiService
+    private val CREATE_FILE_REQUEST_CODE = 123
+    private lateinit var pdfDocument: PdfDocument
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_laporan_detail, container, false)
+        return inflater.inflate(R.layout.fragment_laporan_detail, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val args = arguments
         var order: Order? = null
 
@@ -49,7 +61,17 @@ class LaporanDetailFragment : Fragment() {
             recyclerView.adapter = LaporanDetailAdapter(order.order_list)
         }
 
-        return view
+        pdfDocument = PdfDocument()
+    }
+
+    private fun displayOrderDetails(view: View, order: Order) {
+        view.findViewById<TextView>(R.id.txt_invoice).text = order.order_no
+        view.findViewById<TextView>(R.id.txt_metode_pembayaran).text = order.payment_type
+        view.findViewById<TextView>(R.id.status_order).text = order.status
+        view.findViewById<TextView>(R.id.hasil_tgl_order).text = order.updated_at
+        view.findViewById<TextView>(R.id.txt_diskon).text = order.total_diskon?.toString() ?: "0"
+        view.findViewById<TextView>(R.id.hasil_total_order).text = order.total_transaksi.toString()
+        view.findViewById<TextView>(R.id.hasil_order_note).text = order.order_note
     }
 
     private fun setupButtons(view: View, order: Order?) {
@@ -68,6 +90,10 @@ class LaporanDetailFragment : Fragment() {
                     cancelOrder(orderId)
                 }
             }
+        }
+        view.findViewById<Button>(R.id.btn_download).apply {
+            visibility = if (order?.status != "completed") View.GONE else View.VISIBLE
+            setOnClickListener { generatePdf(view) }
         }
     }
 
@@ -119,14 +145,46 @@ class LaporanDetailFragment : Fragment() {
         }
     }
 
+    private fun generatePdf(view: View) {
+        val bitmap = view.toBitmap()
+        val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
+        val page = pdfDocument.startPage(pageInfo)
+        val canvas = page.canvas
+        canvas.drawBitmap(bitmap, 0f, 0f, null)
+        pdfDocument.finishPage(page)
 
-    private fun displayOrderDetails(view: View, order: Order) {
-        view.findViewById<TextView>(R.id.txt_invoice).text = order.order_no
-        view.findViewById<TextView>(R.id.txt_metode_pembayaran).text = order.payment_type
-        view.findViewById<TextView>(R.id.status_order).text = order.status
-        view.findViewById<TextView>(R.id.hasil_tgl_order).text = order.updated_at
-        view.findViewById<TextView>(R.id.txt_diskon).text = order.total_diskon?.toString() ?: "0"
-        view.findViewById<TextView>(R.id.hasil_total_order).text = order.total_transaksi.toString()
-        view.findViewById<TextView>(R.id.hasil_order_note).text = order.order_note
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_TITLE, "order_receipt.pdf")
+        }
+        startActivityForResult(intent, CREATE_FILE_REQUEST_CODE)
     }
+
+    private fun View.toBitmap(): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        draw(canvas)
+        return bitmap
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CREATE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.also { uri ->
+                try {
+                    activity?.contentResolver?.openOutputStream(uri)?.use { outputStream ->
+                        pdfDocument.writeTo(outputStream)
+                    }
+                    Log.d("LaporanDetail", "onActivityResult: creating...")
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                } finally {
+                    pdfDocument.close()
+                    Log.d("LaporanDetail", "onActivityResult: done")
+                }
+            }
+        }
+    }
+
 }
