@@ -28,10 +28,10 @@ interface ApiEndpoint {
         @Field("s") key: String,
     ): Call<MenuResponse>
 
-    @DELETE("menu/{id}")
+    @POST("menu/delete/{id}")
     fun deleteMenu(
         @Header("Authorization") token: String,
-        @Path("id") id: Int
+        @Path("id") id: String
     ): Call<MenuResponsePost>
 
     @Multipart

@@ -1,9 +1,11 @@
 package com.bdi.kasiran.adapter
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
@@ -17,7 +19,8 @@ import com.bumptech.glide.request.RequestOptions
 import java.text.NumberFormat
 import java.util.Locale
 
-class MenuAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
+class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItemClickListener) :
+    RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
 
     private val api by lazy { BaseRetrofit().endpoint }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,29 +54,10 @@ class MenuAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<MenuAdapter.Vi
             it.findNavController().navigate(R.id.menuDetailFragment, bundle)
         }
 
+        holder.btnDelete.setOnClickListener {
+            listener.onDelete(menu, position)
+        }
 
-//        holder.btnDelete.setOnClickListener {
-//            Toast.makeText(holder.itemView.context, menu.nama,Toast.LENGTH_LONG).show()
-//            val token = LoginActivity.sessionManager.getString("TOKEN")
-//            val admin_id = LoginActivity.sessionManager.getString("ADMIN_ID")
-//
-//            api.deleteProduk(token.toString(),produk.id.toInt()).enqueue(object :Callback<MenuResponse>{
-//                override fun onResponse(
-//                    call: Call<MenuResponsePost>,
-//                    response: Response<MenuResponsePost>
-//                ) {
-//                    Toast.makeText(holder.itemView.context, "Delete " +produk.nama.toString()+ " Success", Toast.LENGTH_LONG).show()
-//
-//                    holder.itemView.findNavController().navigate(R.id.menuFragment)
-//                }
-//
-//                override fun onFailure(call: Call<MenuResponsePost>, t: Throwable) {
-//                    Log.e("Error", t.toString())
-//                }
-//
-//            })
-//        }
-//
 //        holder.btnEdit.setOnClickListener {
 //            Toast.makeText(holder.itemView.context, produk.menu_name, Toast.LENGTH_LONG).show()
 //
@@ -90,10 +74,12 @@ class MenuAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<MenuAdapter.Vi
         val txtHargaMenu = itemView.findViewById<TextView>(R.id.txt_harga)
         val txtStok = itemView.findViewById<TextView>(R.id.txt_stok)
         val txtGambar = itemView.findViewById<ImageView>(R.id.img_gambar)
-
-
-//        val btnDelete = itemView.findViewById<ImageButton>(R.id.btnDeleteProduk)
+        val btnDelete = itemView.findViewById<ImageButton>(R.id.btnDeleteProduk)
 //        val btnEdit = itemView.findViewById<ImageButton>(R.id.btnEditProduk)
+    }
+
+    interface OnItemClickListener {
+        fun onDelete(item: Menu, position: Int)
     }
 
 }

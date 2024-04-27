@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bdi.kasiran.response.menu.Menu
 import com.bdi.kasiran.response.menu.MenuResponse
+import com.bdi.kasiran.response.menu.MenuResponsePost
 import com.bdi.kasiran.ui.auth.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -59,4 +60,27 @@ class OrderViewModel : ViewModel() {
         })
         return data
     }
+
+    fun deleteMenu(api: ApiEndpoint, id: String): LiveData<MenuResponsePost> {
+        val data = MutableLiveData<MenuResponsePost>()
+        val token = LoginActivity.sessionManager.getString("TOKEN")
+        api.deleteMenu(token.toString(), id).enqueue(object : Callback<MenuResponsePost> {
+            override fun onResponse(
+                call: Call<MenuResponsePost>,
+                response: Response<MenuResponsePost>
+            ) {
+                if (response.isSuccessful) {
+                    data.value = response.body()
+                }
+                Log.d("OrderViewModel", "onResponse delete: ${response.body()}")
+            }
+
+            override fun onFailure(call: Call<MenuResponsePost>, t: Throwable) {
+                Log.e("Error", t.toString())
+            }
+
+        })
+        return data
+    }
+
 }

@@ -51,7 +51,21 @@ class MenuFragment : Fragment() {
         val rvTransaksi = binding.rcvListmenu
         rvTransaksi.setHasFixedSize(true)
         rvTransaksi.layoutManager = LinearLayoutManager(activity)
-        val rvAdapter = MenuAdapter(data)
+        val rvAdapter = MenuAdapter(data, object : MenuAdapter.OnItemClickListener {
+            override fun onDelete(item: Menu, position: Int) {
+                viewModel.deleteMenu(api, item.menu_uuid).observe(viewLifecycleOwner) {
+                    if (it.success) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Delete ${item.menu_name} Success",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        findNavController().navigate(R.id.menuFragment)
+                    }
+                }
+            }
+
+        })
         rvTransaksi.adapter = rvAdapter
     }
 
