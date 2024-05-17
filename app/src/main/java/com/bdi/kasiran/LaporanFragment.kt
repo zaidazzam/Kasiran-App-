@@ -63,7 +63,7 @@ class LaporanFragment : Fragment() {
     private fun handleOrderDataResponse(orderResponse: OrderResponse?) {
         if (orderResponse != null && orderResponse.success) {
             val orderList = orderResponse.data
-            val rvAdapter = LaporanAdapter(orderList)
+            val rvAdapter = LaporanAdapter(orderList.toMutableList())
 
             recyclerView.adapter = rvAdapter
         } else {

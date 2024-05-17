@@ -3,7 +3,6 @@ package com.bdi.kasiran
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +51,7 @@ class OrderFragment : Fragment() {
             val txtTotalBayar = view.findViewById<TextView>(R.id.txtTotalPembayaran)
             val localeID = Locale("in", "ID")
             val numberFormat = NumberFormat.getCurrencyInstance(localeID)
-            numberFormat.setMaximumFractionDigits(0);
+            numberFormat.maximumFractionDigits = 0
 
             txtTotalBayar?.text = numberFormat.format(it.toDouble()).toString()
         }
@@ -73,7 +72,7 @@ class OrderFragment : Fragment() {
         val rvTransaksi = view.findViewById<RecyclerView>(R.id.rcv_listmenuorder)
         rvTransaksi.setHasFixedSize(true)
         rvTransaksi.layoutManager = LinearLayoutManager(activity)
-        val rvAdapter = OrderAdapter(data)
+        val rvAdapter = OrderAdapter(requireContext(), data) // Pass context here
         rvTransaksi.adapter = rvAdapter
 
         rvAdapter.callBackInterface = object : CallBackInterface {
@@ -81,8 +80,11 @@ class OrderFragment : Fragment() {
                 totalPrice.value = total
                 cartData.value = cart
             }
-
         }
+
+        // Update UI with persisted data if available
+        totalPrice.value = rvAdapter.total.toString()
+        cartData.value = rvAdapter.cart
     }
 
     private fun setUpSearch(view: View, allMenu: List<Menu>) {
@@ -126,7 +128,7 @@ class OrderFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        totalPrice.value = 0.toString()
+        // No need to clear SharedPreferences here if you want data persistence
     }
 
     companion object {

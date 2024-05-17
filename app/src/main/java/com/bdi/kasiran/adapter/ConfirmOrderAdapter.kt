@@ -20,7 +20,6 @@ class ConfirmOrderAdapter(val listCart: List<Cart>, val context: Context) :
             val localeID = Locale("in", "ID")
             val numberFormat = NumberFormat.getCurrencyInstance(localeID)
             numberFormat.maximumFractionDigits = 0
-
             binding.txtNama.text = cartItem.nama
             binding.txtHarga.text = numberFormat.format(cartItem.harga)
             binding.txtStok1.text = context.getString(R.string.qty_confirm, cartItem.qty.toString())

@@ -1,5 +1,6 @@
 package com.bdi.kasiran
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,12 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bdi.kasiran.OrderFragment.Companion.CART_DATA
 import com.bdi.kasiran.OrderFragment.Companion.TOTAL
 import com.bdi.kasiran.adapter.ConfirmOrderAdapter
+import com.bdi.kasiran.adapter.OrderAdapter
 import com.bdi.kasiran.databinding.FragmentConfirmOrderBinding
 import com.bdi.kasiran.network.BaseRetrofit
 import com.bdi.kasiran.response.cart.Cart
 import com.bdi.kasiran.response.diskon.Diskon
 import com.bdi.kasiran.response.order.OrderItem
 import com.bdi.kasiran.response.order.OrderStore
+import java.text.NumberFormat
+import java.util.Locale
 
 class ConfirmOrderFragment : Fragment() {
 
@@ -29,6 +33,11 @@ class ConfirmOrderFragment : Fragment() {
     private lateinit var cartData: List<Cart>
     private var discountNominal = 0.0
     private var total = 0.0
+    private val sharedPreferences by lazy {
+        requireActivity().getSharedPreferences("OrderPrefs", Context.MODE_PRIVATE)
+    }
+
+    // private lateinit var orderAdapter: OrderAdapter // Tidak diperlukan
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,13 +65,14 @@ class ConfirmOrderFragment : Fragment() {
     }
 
     private fun setItemData(listCart: List<Cart>) {
-        val rvAdapter = ConfirmOrderAdapter(listCart, requireContext())
+        val adapter = ConfirmOrderAdapter(listCart, requireContext()) // Menukar posisi parameter
         binding.rvOrderDetail.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(activity)
-            adapter = rvAdapter
+            this.adapter = adapter
         }
     }
+
 
     private fun setDiscountSpinner(list: List<Diskon>) {
         val items = arrayListOf<String>()
@@ -88,12 +98,18 @@ class ConfirmOrderFragment : Fragment() {
                         if (discountNominal < total) {
                             newTotal = total - discountNominal
                         }
-                        Log.d(TAG, "setDiscountSpinner total: $total")
-                        binding.valTotal.text =
-                            requireContext().getString(R.string.total_price, newTotal.toString())
+                        val localeID = Locale("in", "ID")
+                        val numberFormat = NumberFormat.getCurrencyInstance(localeID)
+                        numberFormat.maximumFractionDigits = 0
+                        val formattedTotal = numberFormat.format(newTotal)
+                        Log.d(TAG, "setDiscountSpinner total: $formattedTotal")
+                        binding.valTotal.text = formattedTotal
                     } else {
-                        binding.valTotal.text =
-                            requireContext().getString(R.string.total_price, total.toString())
+                        val localeID = Locale("in", "ID")
+                        val numberFormat = NumberFormat.getCurrencyInstance(localeID)
+                        numberFormat.maximumFractionDigits = 0
+                        val formattedTotal = numberFormat.format(total)
+                        binding.valTotal.text = formattedTotal
                     }
                 }
 
@@ -103,6 +119,7 @@ class ConfirmOrderFragment : Fragment() {
             }
     }
 
+
     private fun setPaymentSpinner() {
         val items = listOf("Cash", "Cashless")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, items)
@@ -110,6 +127,7 @@ class ConfirmOrderFragment : Fragment() {
         binding.spinPayment.adapter = adapter
     }
 
+    // ConfirmOrderFragment
     private fun onSubmit() {
         var discount = ""
         if (binding.spinDiscount.selectedItemPosition != 0) {
@@ -132,9 +150,24 @@ class ConfirmOrderFragment : Fragment() {
             diskon_code = discount,
             order_list = listOrderItem
         )
-        viewModel.storeOrder(api, order).observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-            if (it.success) {
+        viewModel.storeOrder(api, order).observe(viewLifecycleOwner) { response ->
+            Toast.makeText(requireContext(), response.message, Toast.LENGTH_SHORT).show()
+            if (response.success) {
+                // Clear the data in the adapter after successful transaction
+                (binding.rvOrderDetail.adapter as? OrderAdapter)?.clearData()
+                (binding.rvOrderDetail.adapter as? OrderAdapter)?.clearItemQtyMap()
+
+                // Clear total after successful transaction
+                total = 0.0
+                val localeID = Locale("in", "ID")
+                val numberFormat = NumberFormat.getCurrencyInstance(localeID)
+                numberFormat.maximumFractionDigits = 0
+                val formattedTotal = numberFormat.format(total)
+                binding.valTotal.text = formattedTotal
+
+                // Clear SharedPreferences data
+                clearSharedPreferencesData()
+
                 val fragmentManager = requireActivity().supportFragmentManager
                 if (fragmentManager.backStackEntryCount > 0) {
                     fragmentManager.popBackStack()
@@ -144,6 +177,19 @@ class ConfirmOrderFragment : Fragment() {
             }
         }
     }
+
+    private fun clearSharedPreferencesData() {
+        val editor = sharedPreferences.edit()
+        editor.putFloat("total", 0.0f)
+        editor.putString("cart", "")
+        editor.putString("itemQtyMap", "")
+        editor.apply()
+    }
+
+
+
+
+
 
     companion object {
         const val TAG = "ConfirmOrderFragment"

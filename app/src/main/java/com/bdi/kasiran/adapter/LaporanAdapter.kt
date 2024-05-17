@@ -1,5 +1,4 @@
 package com.bdi.kasiran.adapter
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,24 @@ import com.bdi.kasiran.response.order.Order
 import java.text.NumberFormat
 import java.util.Locale
 
-class LaporanAdapter(private val listTransaksi: List<Order>) : RecyclerView.Adapter<LaporanAdapter.ViewHolder>() {
+class LaporanAdapter(private var listTransaksi: MutableList<Order>) : RecyclerView.Adapter<LaporanAdapter.ViewHolder>() {
+
+    private var pageNumber: Int = 0
+    private var pageSize: Int = 10
+
+    fun setPagination(pageNumber: Int, pageSize: Int) {
+        this.pageNumber = pageNumber
+        this.pageSize = pageSize
+        updateTransactionList()
+    }
+
+    private fun updateTransactionList() {
+        val startIndex = pageNumber * pageSize
+        val endIndex = (pageNumber + 1) * pageSize
+        listTransaksi = listTransaksi.subList(startIndex, endIndex).toMutableList()
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_laporan, parent, false)
         return ViewHolder(view)
@@ -42,12 +58,6 @@ class LaporanAdapter(private val listTransaksi: List<Order>) : RecyclerView.Adap
             else -> holder.txtStatus.backgroundTintList = ContextCompat.getColorStateList(holder.itemView.context, R.color.abu) // opsional untuk status lain
         }
 
-//        holder.itemView.setOnClickListener {
-//            val bundle = Bundle().apply {
-//                putParcelable("order", transaksi)
-//            }
-//            it.findNavController().navigate(R.id.laporanDetailFragment, bundle)
-//        }
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
             bundle.putParcelable("transaksi", transaksi)
