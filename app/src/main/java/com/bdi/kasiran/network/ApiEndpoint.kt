@@ -1,5 +1,6 @@
 import com.bdi.kasiran.response.diskon.DiskonResponse
 import com.bdi.kasiran.response.login.LoginResponse
+import com.bdi.kasiran.response.logout.LogoutResponse
 import com.bdi.kasiran.response.menu.MenuResponse
 import com.bdi.kasiran.response.menu.MenuResponsePost
 import com.bdi.kasiran.response.order.OrderCompleteResponse
@@ -17,6 +18,12 @@ interface ApiEndpoint {
         @Field("email") email: String,
         @Field("password") password: String
     ): Call<LoginResponse>
+
+    @POST("logout")
+    fun logout(
+        @Header("Authorization") token: String
+    ): Call<LogoutResponse>
+
 
     @POST("menu")
     fun getMenuData(@Header("Authorization") token: String): Call<MenuResponse>

@@ -55,6 +55,8 @@
     <string name="tanggal">2024-01-07</string>
     <string name="qty_confirm">x%1$s</string>
     <string name="total_price">Rp.%1$s</string>
+    <string name="logout">Peringatan</string>
+    <string name="messagelogout">Apakah Anda yakin ingin Hapus?</string>
     <string-array name="tipe_options">
         <item>unit_stock</item>
         <item>daily_stock</item>

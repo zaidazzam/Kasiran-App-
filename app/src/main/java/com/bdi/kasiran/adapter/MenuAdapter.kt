@@ -1,13 +1,15 @@
 package com.bdi.kasiran.adapter
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.R
@@ -23,6 +25,7 @@ class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItem
     RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
 
     private val api by lazy { BaseRetrofit().endpoint }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_menu, parent, false)
         return ViewHolder(view)
@@ -36,12 +39,12 @@ class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItem
         val menu = listmenu[position]
         val localeID = Locale("in", "ID")
         val numberFormat = NumberFormat.getCurrencyInstance(localeID)
-        numberFormat.setMaximumFractionDigits(0);
+        numberFormat.maximumFractionDigits = 0 // Menggunakan setter untuk maximumFractionDigits
         holder.txtNamaMenu.text = menu.menu_name
         holder.txtHargaMenu.text = numberFormat.format(menu.menu_price.toDouble()).toString()
         holder.txtStok.text = menu.menu_qty
 
-        // Load image into ImageView using Gliden
+        // Load image into ImageView using Glide
         Glide.with(holder.itemView.context)
             .load(menu.menu_image)
             .apply(RequestOptions().placeholder(R.drawable.sample_photo)) // Placeholder image while loading
@@ -55,31 +58,39 @@ class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItem
         }
 
         holder.btnDelete.setOnClickListener {
+            showDeleteConfirmationDialog(menu, position, holder.itemView.context) // Memanggil fungsi dengan menyertakan context
+        }
+    }
+
+    private fun showDeleteConfirmationDialog(menu: Menu, position: Int, context: Context) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.layout_custom_dialog, null)
+        val dialog = AlertDialog.Builder(context).setView(dialogView).create()
+
+        val btnYes = dialogView.findViewById<Button>(R.id.btnYes)
+        val btnNo = dialogView.findViewById<Button>(R.id.btnNo)
+
+        btnYes.setOnClickListener {
+            dialog.dismiss()
             listener.onDelete(menu, position)
         }
 
-//        holder.btnEdit.setOnClickListener {
-//            Toast.makeText(holder.itemView.context, produk.menu_name, Toast.LENGTH_LONG).show()
-//
-//            val bundle = Bundle()
-//            bundle.putParcelable("produk", produk)
-//
-//
-//            holder.itemView.findNavController().navigate(R.id.produkFromEditFragment, bundle)
-//        }
+        btnNo.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtNamaMenu = itemView.findViewById<TextView>(R.id.txt_nama)
         val txtHargaMenu = itemView.findViewById<TextView>(R.id.txt_harga)
         val txtStok = itemView.findViewById<TextView>(R.id.txt_stok)
         val txtGambar = itemView.findViewById<ImageView>(R.id.img_gambar)
         val btnDelete = itemView.findViewById<ImageButton>(R.id.btnDeleteProduk)
-//        val btnEdit = itemView.findViewById<ImageButton>(R.id.btnEditProduk)
     }
 
     interface OnItemClickListener {
         fun onDelete(item: Menu, position: Int)
     }
-
 }
+

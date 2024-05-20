@@ -21,8 +21,7 @@
             android:layout_height="wrap_content"
             android:background="@color/utama"
             android:minHeight="?attr/actionBarSize"
-            app:labelVisibilityMode="unlabeled"
-            app:titleTextColor="@color/white">
+            app:labelVisibilityMode="unlabeled">
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -51,8 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="@color/utama"
-        android:scrollbarThumbHorizontal="@color/white"
-        android:scrollbarThumbVertical="@color/white"
+
         app:itemIconTint="@color/black"
         app:itemTextColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
