@@ -233,7 +233,7 @@
                 android:backgroundTint="@color/utama"
                 android:fontFamily="@font/poppins"
                 android:padding="6dp"
-                android:text="Download Bill"
+                android:text="Cetak Struk"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

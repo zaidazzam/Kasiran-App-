@@ -10,6 +10,10 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bdi.kasiran.OrderFragment.Companion.CART_DATA
 import com.bdi.kasiran.OrderFragment.Companion.TOTAL
@@ -18,8 +22,14 @@ import com.bdi.kasiran.databinding.FragmentConfirmOrderBinding
 import com.bdi.kasiran.network.BaseRetrofit
 import com.bdi.kasiran.response.cart.Cart
 import com.bdi.kasiran.response.diskon.Diskon
+import com.bdi.kasiran.response.order.Order
 import com.bdi.kasiran.response.order.OrderItem
+import com.bdi.kasiran.response.order.OrderResponse
 import com.bdi.kasiran.response.order.OrderStore
+import com.bdi.kasiran.ui.auth.LoginActivity
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ConfirmOrderFragment : Fragment() {
 
@@ -135,14 +145,46 @@ class ConfirmOrderFragment : Fragment() {
         viewModel.storeOrder(api, order).observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
             if (it.success) {
-                val fragmentManager = requireActivity().supportFragmentManager
-                if (fragmentManager.backStackEntryCount > 0) {
-                    fragmentManager.popBackStack()
-                } else {
-                    requireActivity().onBackPressed()
+                getLaporanTransaksi().observe(viewLifecycleOwner) { order ->
+                    if (order != null) {
+                        val bundle = Bundle().apply {
+                            putParcelable("transaksi", order)
+                        }
+                        val navOptions = NavOptions.Builder()
+                            .setPopUpTo(R.id.confirmOrderFragment, true)
+                            .build()
+
+                        findNavController().navigate(R.id.laporanDetailFragment, bundle, navOptions)
+                    }
                 }
             }
         }
+    }
+
+    private fun getLaporanTransaksi(): LiveData<Order> {
+        val order = MutableLiveData<Order>()
+        val token = LoginActivity.sessionManager.getString("TOKEN")
+        api.getOrder(token.toString()).enqueue(object : Callback<OrderResponse> {
+            override fun onResponse(
+                call: Call<OrderResponse>,
+                response: Response<OrderResponse>
+            ) {
+                if (isAdded) { // Check if the Fragment is currently added to an Activity
+                    if (response.isSuccessful) {
+                        order.value = response.body()!!.data[0]
+                    } else {
+                        Log.e("Error", "Failed to get laporan data. Code: ${response.code()}")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<OrderResponse>, t: Throwable) {
+                if (isAdded) { // Ensure Fragment is attached before interacting with the context
+                    Log.e("Error", "Failed to get laporan data", t)
+                }
+            }
+        })
+        return order
     }
 
     companion object {

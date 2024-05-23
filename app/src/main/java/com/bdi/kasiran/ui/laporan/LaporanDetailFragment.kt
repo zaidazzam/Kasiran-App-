@@ -1,10 +1,5 @@
 package com.bdi.kasiran.ui.laporan
 
-import android.app.Activity
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,12 +21,9 @@ import com.bdi.kasiran.ui.auth.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
 
 class LaporanDetailFragment : Fragment() {
     private val api by lazy { BaseRetrofit().endpoint }  // Make sure this instance correctly provides your ApiService
-    private val CREATE_FILE_REQUEST_CODE = 123
-    private lateinit var pdfDocument: PdfDocument
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,7 +53,6 @@ class LaporanDetailFragment : Fragment() {
             recyclerView.adapter = LaporanDetailAdapter(order.order_list)
         }
 
-        pdfDocument = PdfDocument()
     }
 
     private fun displayOrderDetails(view: View, order: Order) {
@@ -92,8 +83,9 @@ class LaporanDetailFragment : Fragment() {
             }
         }
         view.findViewById<Button>(R.id.btn_download).apply {
-            visibility = if (order?.status != "completed") View.GONE else View.VISIBLE
-            setOnClickListener { generatePdf(view) }
+            order?.let {
+                setOnClickListener { printData(order) }
+            }
         }
     }
 
@@ -101,23 +93,43 @@ class LaporanDetailFragment : Fragment() {
         val token = LoginActivity.sessionManager.getString("TOKEN")
         token?.let {
             val authToken = "Bearer $it"
-            api.getCompleteOrder(authToken, orderId).enqueue(object : Callback<OrderCompleteResponse> {
-                override fun onResponse(call: Call<OrderCompleteResponse>, response: Response<OrderCompleteResponse>) {
-                    if (response.isSuccessful) {
-                        Toast.makeText(requireContext(), "Order completed successfully!", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.menuOrderFragment)  // Assuming you want to navigate away
-                    } else {
-                        Toast.makeText(requireContext(), "Failed to complete the order", Toast.LENGTH_SHORT).show()
+            api.getCompleteOrder(authToken, orderId)
+                .enqueue(object : Callback<OrderCompleteResponse> {
+                    override fun onResponse(
+                        call: Call<OrderCompleteResponse>,
+                        response: Response<OrderCompleteResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Order completed successfully!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            findNavController().navigate(R.id.menuOrderFragment)  // Assuming you want to navigate away
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to complete the order",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<OrderCompleteResponse>, t: Throwable) {
-                    Log.e("ERROR", "Network error or API failure", t)
-                    Toast.makeText(requireContext(), "Network error or API failure: ${t.message}", Toast.LENGTH_LONG).show()
-                }
-            })
+                    override fun onFailure(call: Call<OrderCompleteResponse>, t: Throwable) {
+                        Log.e("ERROR", "Network error or API failure", t)
+                        Toast.makeText(
+                            requireContext(),
+                            "Network error or API failure: ${t.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                })
         } ?: run {
-            Toast.makeText(requireContext(), "Authentication token is not available", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                requireContext(),
+                "Authentication token is not available",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -126,65 +138,80 @@ class LaporanDetailFragment : Fragment() {
         token?.let {
             val authToken = "Bearer $it"
             api.cancelOrder(authToken, orderId).enqueue(object : Callback<OrderCompleteResponse> {
-                override fun onResponse(call: Call<OrderCompleteResponse>, response: Response<OrderCompleteResponse>) {
+                override fun onResponse(
+                    call: Call<OrderCompleteResponse>,
+                    response: Response<OrderCompleteResponse>
+                ) {
                     if (response.isSuccessful) {
-                        Toast.makeText(requireContext(), "Order cancelled!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Order cancelled!", Toast.LENGTH_SHORT)
+                            .show()
                         findNavController().navigate(R.id.menuOrderFragment)  // Assuming you want to navigate away
                     } else {
-                        Toast.makeText(requireContext(), "Failed to cancel the order", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to cancel the order",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<OrderCompleteResponse>, t: Throwable) {
                     Log.e("ERROR", "Network error or API failure", t)
-                    Toast.makeText(requireContext(), "Network error or API failure: ${t.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Network error or API failure: ${t.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             })
         } ?: run {
-            Toast.makeText(requireContext(), "Authentication token is not available", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                requireContext(),
+                "Authentication token is not available",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
-    private fun generatePdf(view: View) {
-        val bitmap = view.toBitmap()
-        val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
-        val page = pdfDocument.startPage(pageInfo)
-        val canvas = page.canvas
-        canvas.drawBitmap(bitmap, 0f, 0f, null)
-        pdfDocument.finishPage(page)
-
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "application/pdf"
-            putExtra(Intent.EXTRA_TITLE, "order_receipt.pdf")
-        }
-        startActivityForResult(intent, CREATE_FILE_REQUEST_CODE)
-    }
-
-    private fun View.toBitmap(): Bitmap {
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        draw(canvas)
-        return bitmap
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CREATE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            data?.data?.also { uri ->
-                try {
-                    activity?.contentResolver?.openOutputStream(uri)?.use { outputStream ->
-                        pdfDocument.writeTo(outputStream)
-                    }
-                    Log.d("LaporanDetail", "onActivityResult: creating...")
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                } finally {
-                    pdfDocument.close()
-                    Log.d("LaporanDetail", "onActivityResult: done")
-                }
-            }
-        }
+    private fun printData(data: Order) {
+//        var listOrder = ""
+//        for (i in 0 until data.order_list.size) {
+//            val total = data.order_list[i].menu_qty.toInt() * data.order_list[i].menu_price
+//            listOrder += "[L]<b>${data.order_list[i].menu_name}</b>\n" +
+//                    "[L]${data.order_list[i].menu_price} x${data.order_list[i].menu_qty} pcs[R]" +
+//                    total + "\n"
+//        }
+//
+//        try {
+//            val connections: BluetoothConnection =
+//                BluetoothPrintersConnections.selectFirstPaired()!!
+//            val printer = EscPosPrinter(
+//                connections,
+//                printerDpi = 203,
+//                printerWidthMM = 48f,
+//                printerNbrCharactersPerLine = 32
+//            )
+//            val text =
+//                "[c]<b> Warung Kilat </b>\n" +
+//                        "[C].J. Samgkali No.21\n" +
+//                        "[L]Kasir : Lestyo\n" +
+//                        "[L]Tanggal : 10 Agustus 2023\n" +
+//                        "================\n" +
+//                        listOrder +
+//                        "[C]----------------\n" +
+//                        "[L]<b>Total Amount</b>[R]" + data.total_transaksi + "\n" +
+//                        "[C]----------------\n" +
+//                        "[C]Terima Kasih Sudah Berbelanja\n"
+//
+//            printer.printFormattedText(text)
+//            connections.disconnect()
+//        } catch (e: Exception) {
+//            println("Message BDI POS :")
+//            e.printStackTrace()
+//            val msg = "Perangkat tidak terhubung dengan thermal printer, " +
+//                    "silahkan hubungkan melalui bluetooth"
+//            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+//        }
     }
 
 }
