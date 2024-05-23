@@ -9,7 +9,14 @@
         android:id="@+id/menuFragment"
         android:label="Daftar Menu"
         android:name="com.bdi.kasiran.MenuFragment"
-        tools:layout="@layout/fragment_menu" />
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_menuFragment_to_menuEditFragment"
+            app:destination="@id/menuEditFragment" />
+        <argument
+            android:name="menuUuid"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/menuDetailFragment"

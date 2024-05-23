@@ -109,7 +109,9 @@ class MenuEditFragment : Fragment() {
             val typeMenu = spinnerTypeMenu.selectedItem.toString()
             val descMenu = etDescMenu.text.toString().trim()
 
-            if (validateInput(namaMenu, hargaMenu, stokMenu, typeMenu, descMenu, imageFile)) {
+            Log.d("MenuEdit", "$namaMenu - $hargaMenu - $stokMenu - $typeMenu - $descMenu")
+
+            if (validateInput(namaMenu, hargaMenu, stokMenu, typeMenu, descMenu)) {
                 editMenu(namaMenu, hargaMenu, stokMenu, typeMenu, descMenu)
             } else {
                 Toast.makeText(
@@ -130,13 +132,10 @@ class MenuEditFragment : Fragment() {
         hargaMenu: String,
         stokMenu: String,
         typeMenu: String,
-        descMenu: String,
-        imageFile: File?
+        descMenu: String
     ): Boolean {
         return namaMenu.isNotEmpty() && hargaMenu.isNotEmpty() && stokMenu.isNotEmpty() &&
-                typeMenu.isNotEmpty() && descMenu.isNotEmpty() && imageFile != null && isValidImageType(
-            imageFile
-        )
+                typeMenu.isNotEmpty() && descMenu.isNotEmpty()
     }
 
     private fun editMenu(
@@ -149,12 +148,12 @@ class MenuEditFragment : Fragment() {
         val token = LoginActivity.sessionManager.getString("TOKEN")
 
         token?.let { authToken ->
-            val imageRequestBody = imageFile!!.asRequestBody("image/*".toMediaType())
-            val imagePart =
-                MultipartBody.Part.createFormData("menu_image", imageFile!!.name, imageRequestBody)
+//            val imageRequestBody = imageFile!!.asRequestBody("image/*".toMediaType())
+//            val imagePart =
+//                MultipartBody.Part.createFormData("menu_image", imageFile!!.name, imageRequestBody)
 
             val namaMenuRequestBody = namaMenu.toRequestBody("text/plain".toMediaType())
-            val hargaMenuRequestBody = hargaMenu.toRequestBody("text/plain".toMediaType())
+            val hargaMenuRequestBody = hargaMenu.toInt()
             val stokMenuRequestBody = stokMenu.toRequestBody("text/plain".toMediaType())
             val typeMenuRequestBody = typeMenu.toRequestBody("text/plain".toMediaType())
             val descMenuRequestBody = descMenu.toRequestBody("text/plain".toMediaType())
@@ -167,7 +166,7 @@ class MenuEditFragment : Fragment() {
                 stokMenuRequestBody,
                 typeMenuRequestBody,
                 descMenuRequestBody,
-                imagePart
+                null
             )
                     .enqueue(object : Callback<MenuResponsePost> {
                     override fun onResponse(
@@ -248,8 +247,9 @@ class MenuEditFragment : Fragment() {
             override fun onResponse(call: Call<MenuResponse>, response: Response<MenuResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.data?.find { it.menu_uuid == uuid }?.let { menu ->
+                        val price = menu.menu_price.toDouble()
                         view?.findViewById<EditText>(R.id.edt_nama)?.setText(menu.menu_name)
-                        view?.findViewById<EditText>(R.id.edt_harga)?.setText(menu.menu_price)
+                        view?.findViewById<EditText>(R.id.edt_harga)?.setText(price.toInt().toString())
                         view?.findViewById<EditText>(R.id.edt_stok)?.setText(menu.menu_qty)
                         view?.findViewById<EditText>(R.id.edt_decs)?.setText(menu.menu_desc)
 

@@ -58,15 +58,12 @@ class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItem
             listener.onDelete(menu, position)
         }
 
-//        holder.btnEdit.setOnClickListener {
-//            Toast.makeText(holder.itemView.context, produk.menu_name, Toast.LENGTH_LONG).show()
-//
-//            val bundle = Bundle()
-//            bundle.putParcelable("produk", produk)
-//
-//
-//            holder.itemView.findNavController().navigate(R.id.produkFromEditFragment, bundle)
-//        }
+        holder.btnEdit.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("menuUuid", menu.menu_uuid)
+            }
+            holder.itemView.findNavController().navigate(R.id.action_menuFragment_to_menuEditFragment, bundle)
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -75,7 +72,7 @@ class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItem
         val txtStok = itemView.findViewById<TextView>(R.id.txt_stok)
         val txtGambar = itemView.findViewById<ImageView>(R.id.img_gambar)
         val btnDelete = itemView.findViewById<ImageButton>(R.id.btnDeleteProduk)
-//        val btnEdit = itemView.findViewById<ImageButton>(R.id.btnEditProduk)
+        val btnEdit = itemView.findViewById<ImageButton>(R.id.btnEditProduk)
     }
 
     interface OnItemClickListener {

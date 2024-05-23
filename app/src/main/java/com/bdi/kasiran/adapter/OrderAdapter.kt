@@ -52,12 +52,6 @@ class OrderAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<OrderAdapter.
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(holder.txtGambar)
 
-        holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putParcelable("menu", menu)
-            it.findNavController().navigate(R.id.menuDetailFragment, bundle)
-        }
-
         holder.btnPlus.setOnClickListener {
             val currentQty = holder.txtQty.text.toString().toInt()
             holder.txtQty.text = (currentQty + 1).toString()

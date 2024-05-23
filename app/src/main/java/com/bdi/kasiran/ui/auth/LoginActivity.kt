@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -46,18 +47,26 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.btnLogin.setOnClickListener {
+            onLogin()
+        }
+    }
 
-        val btnLogin: Button = binding.btnLogin
+    private fun onLogin() {
         val txtEmail: EditText = binding.edtEmail
         val txtPassword: EditText = binding.edtPassword
 
-        btnLogin.setOnClickListener {
-            api.login(txtEmail.text.toString(), txtPassword.text.toString()).enqueue(object :
-                Callback<LoginResponse> {
-                override fun onResponse(
-                    call: Call<LoginResponse>,
-                    response: Response<LoginResponse>
-                ) {
+        // Show a loading indicator or disable the login button to prevent multiple requests
+        binding.btnLogin.isEnabled = false
+        binding.loadingIndicator.visibility = View.VISIBLE
+
+        api.login(txtEmail.text.toString(), txtPassword.text.toString()).enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                // Hide the loading indicator or enable the login button
+                binding.btnLogin.isEnabled = true
+                binding.loadingIndicator.visibility = View.GONE
+
+                if (response.isSuccessful) {
                     val loginResponse = response.body()
 
                     if (loginResponse != null && loginResponse.success) {
@@ -80,20 +89,28 @@ class LoginActivity : AppCompatActivity() {
                         val moveIntent = Intent(this@LoginActivity, MainActivity::class.java)
                         startActivity(moveIntent)
                         finish()
-
                     } else {
-                        Toast.makeText(
-                            applicationContext,
-                            "Password salah",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        // Handle specific error messages from the API if available
+                        val errorMessage = loginResponse?.message ?: "Password salah"
+                        Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
                     }
+                } else {
+                    // Handle HTTP errors (e.g., 4xx, 5xx responses)
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("LoginError", "Error response: $errorBody")
+                    Toast.makeText(applicationContext, "Login failed: ${response.message()}", Toast.LENGTH_LONG).show()
                 }
+            }
 
-                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    Log.e("LoginError", t.toString())
-                }
-            })
-        }
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                // Hide the loading indicator or enable the login button
+                binding.btnLogin.isEnabled = true
+                binding.loadingIndicator.visibility = View.GONE
+
+                Log.e("LoginError", t.toString())
+                Toast.makeText(applicationContext, "Login failed: ${t.localizedMessage}", Toast.LENGTH_LONG).show()
+            }
+        })
     }
+
 }
