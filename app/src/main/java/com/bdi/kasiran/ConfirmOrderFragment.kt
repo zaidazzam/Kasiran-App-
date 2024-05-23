@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,8 +38,6 @@ class ConfirmOrderFragment : Fragment() {
         requireActivity().getSharedPreferences("OrderPrefs", Context.MODE_PRIVATE)
     }
 
-    // private lateinit var orderAdapter: OrderAdapter // Tidak diperlukan
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,7 +60,7 @@ class ConfirmOrderFragment : Fragment() {
         setPaymentSpinner()
 
         binding.valTotal.text = requireContext().getString(R.string.total_price, total.toString())
-        binding.btnProcess.setOnClickListener { onSubmit() }
+        binding.btnProcess.setOnClickListener { showConfirmationDialog() }
     }
 
     private fun setItemData(listCart: List<Cart>) {
@@ -72,7 +71,6 @@ class ConfirmOrderFragment : Fragment() {
             this.adapter = adapter
         }
     }
-
 
     private fun setDiscountSpinner(list: List<Diskon>) {
         val items = arrayListOf<String>()
@@ -119,7 +117,6 @@ class ConfirmOrderFragment : Fragment() {
             }
     }
 
-
     private fun setPaymentSpinner() {
         val items = listOf("Cash", "Cashless")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, items)
@@ -127,14 +124,27 @@ class ConfirmOrderFragment : Fragment() {
         binding.spinPayment.adapter = adapter
     }
 
-    // ConfirmOrderFragment
+    private fun showConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Proses Order")
+            .setMessage("Apakah Anda yakin ingin proses order ini??")
+            .setPositiveButton("Yes") { dialog, which ->
+                onSubmit()
+            }
+            .setNegativeButton("No") { dialog, which ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
     private fun onSubmit() {
         var discount = ""
         if (binding.spinDiscount.selectedItemPosition != 0) {
             discount = binding.spinDiscount.selectedItem.toString()
         }
         val payment = binding.spinPayment.selectedItem.toString()
-        val note = binding.edNote.text.toString()
+//        val note = binding.edNote.text.toString()
         val listOrderItem = mutableListOf<OrderItem>()
 
         cartData.forEach() {
@@ -145,7 +155,7 @@ class ConfirmOrderFragment : Fragment() {
         Log.d(TAG, "onSubmit data: $listOrderItem")
 
         val order = OrderStore(
-            order_note = note,
+//            order_note = note,
             payment_type = payment,
             diskon_code = discount,
             order_list = listOrderItem
@@ -185,11 +195,6 @@ class ConfirmOrderFragment : Fragment() {
         editor.putString("itemQtyMap", "")
         editor.apply()
     }
-
-
-
-
-
 
     companion object {
         const val TAG = "ConfirmOrderFragment"

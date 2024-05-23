@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -78,16 +79,20 @@ class LaporanDetailFragment : Fragment() {
         view.findViewById<Button>(R.id.btn_complete).apply {
             visibility = if (order?.status != "pending") View.GONE else View.VISIBLE
             setOnClickListener {
-                order?.order_uuid?.let { orderId ->
-                    completeOrder(orderId)
+                if (order != null) {
+                    showConfirmationDialog("Complete Order", "Apakah Anda yakin ingin Complete pesanan ini??") {
+                        completeOrder(order.order_uuid)
+                    }
                 }
             }
         }
         view.findViewById<Button>(R.id.btn_cancel).apply {
             visibility = if (order?.status != "pending") View.GONE else View.VISIBLE
             setOnClickListener {
-                order?.order_uuid?.let { orderId ->
-                    cancelOrder(orderId)
+                if (order != null) {
+                    showConfirmationDialog("Cancel Order", "Apakah Anda yakin ingin cancel pesanan ini?") {
+                        cancelOrder(order.order_uuid)
+                    }
                 }
             }
         }
@@ -95,6 +100,21 @@ class LaporanDetailFragment : Fragment() {
             visibility = if (order?.status != "completed") View.GONE else View.VISIBLE
             setOnClickListener { generatePdf(view) }
         }
+        view.findViewById<Button>(R.id.btn_print).apply {
+            visibility = if (order?.status != "completed") View.GONE else View.VISIBLE
+            setOnClickListener {}
+        }
+    }
+
+    private fun showConfirmationDialog(title: String, message: String, onConfirm: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Yes") { dialog, which ->
+                onConfirm()
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 
     private fun completeOrder(orderId: String) {
@@ -186,5 +206,4 @@ class LaporanDetailFragment : Fragment() {
             }
         }
     }
-
 }

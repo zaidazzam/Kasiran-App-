@@ -2,14 +2,12 @@ package com.bdi.kasiran.adapter
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.CallBackInterface
 import com.bdi.kasiran.R
@@ -82,11 +80,11 @@ class OrderAdapter(val context: Context, val listmenu: List<Menu>) : RecyclerVie
         val savedQty = itemQtyMap[menu.menu_uuid] ?: 0
         holder.txtQty.text = savedQty.toString()
 
-        holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putParcelable("menu", menu)
-            it.findNavController().navigate(R.id.menuDetailFragment, bundle)
-        }
+//        holder.itemView.setOnClickListener {
+//            val bundle = Bundle()
+//            bundle.putParcelable("menu", menu)
+//            it.findNavController().navigate(R.id.menuDetailFragment, bundle)
+//        }
 
         holder.btnPlus.setOnClickListener {
             val currentQty = holder.txtQty.text.toString().toInt()

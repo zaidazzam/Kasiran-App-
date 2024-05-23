@@ -57,6 +57,7 @@
     <string name="total_price">Rp.%1$s</string>
     <string name="logout">Peringatan</string>
     <string name="messagelogout">Apakah Anda yakin ingin Hapus?</string>
+    <string name="action_logout">Logout</string>
     <string-array name="tipe_options">
         <item>unit_stock</item>
         <item>daily_stock</item>

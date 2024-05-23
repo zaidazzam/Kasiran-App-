@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -63,23 +62,19 @@ class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItem
     }
 
     private fun showDeleteConfirmationDialog(menu: Menu, position: Int, context: Context) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.layout_custom_dialog, null)
-        val dialog = AlertDialog.Builder(context).setView(dialogView).create()
-
-        val btnYes = dialogView.findViewById<Button>(R.id.btnYes)
-        val btnNo = dialogView.findViewById<Button>(R.id.btnNo)
-
-        btnYes.setOnClickListener {
-            dialog.dismiss()
-            listener.onDelete(menu, position)
-        }
-
-        btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
+        AlertDialog.Builder(context)
+            .setTitle("Delete Menu")
+            .setMessage("Apakah kamu yakin ingin hapus menu ini??")
+            .setPositiveButton("Yes") { dialog, which ->
+                listener.onDelete(menu, position)
+            }
+            .setNegativeButton("No") { dialog, which ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
+
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtNamaMenu = itemView.findViewById<TextView>(R.id.txt_nama)
