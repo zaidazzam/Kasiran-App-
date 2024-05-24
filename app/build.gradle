@@ -88,5 +88,5 @@
         implementation("com.squareup.okhttp3:logging-interceptor")
         implementation "androidx.cardview:cardview:1.0.0"
 
-
+        implementation 'androidx.exifinterface:exifinterface:1.3.7'
     }

@@ -2,6 +2,8 @@ package com.bdi.kasiran.ui.menu
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,6 +17,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -33,6 +36,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
 import java.net.URLConnection
 
 class MenuEditFragment : Fragment() {
@@ -44,6 +48,9 @@ class MenuEditFragment : Fragment() {
     // Menambahkan variabel untuk menyimpan menu_uuid yang akan diupdate
     private var menuUuid: String = ""
 
+    private lateinit var btnEdit: Button
+    private lateinit var loadingIndicator: CardView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,7 +59,8 @@ class MenuEditFragment : Fragment() {
         menuUuid = args.menuUuid
 
         // Initialize views
-        val btnEdit = view.findViewById<Button>(R.id.btn_simpan)
+        loadingIndicator = view.findViewById(R.id.loadingIndicator)
+        btnEdit = view.findViewById(R.id.btn_simpan)
         val btnBatal = view.findViewById<Button>(R.id.btn_batal)
         val etNamaMenu = view.findViewById<EditText>(R.id.edt_nama)
         val etHargaMenu = view.findViewById<EditText>(R.id.edt_harga)
@@ -145,12 +153,22 @@ class MenuEditFragment : Fragment() {
         typeMenu: String,
         descMenu: String
     ) {
+        btnEdit.isEnabled = false
+        loadingIndicator.visibility = View.VISIBLE
+
         val token = LoginActivity.sessionManager.getString("TOKEN")
 
         token?.let { authToken ->
-//            val imageRequestBody = imageFile!!.asRequestBody("image/*".toMediaType())
-//            val imagePart =
-//                MultipartBody.Part.createFormData("menu_image", imageFile!!.name, imageRequestBody)
+            var imagePart: MultipartBody.Part? = null
+            if (imageFile != null) {
+                val imageRequestBody = imageFile!!.asRequestBody("image/*".toMediaType())
+                imagePart =
+                    MultipartBody.Part.createFormData(
+                        "menu_image",
+                        imageFile!!.name,
+                        imageRequestBody
+                    )
+            }
 
             val namaMenuRequestBody = namaMenu.toRequestBody("text/plain".toMediaType())
             val hargaMenuRequestBody = hargaMenu.toInt()
@@ -166,7 +184,7 @@ class MenuEditFragment : Fragment() {
                 stokMenuRequestBody,
                 typeMenuRequestBody,
                 descMenuRequestBody,
-                null
+                imagePart
             )
                     .enqueue(object : Callback<MenuResponsePost> {
                     override fun onResponse(
@@ -187,10 +205,15 @@ class MenuEditFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
+                        btnEdit.isEnabled = true
+                        loadingIndicator.visibility = View.GONE
                     }
 
                     override fun onFailure(call: Call<MenuResponsePost>, t: Throwable) {
                         Log.e("ERROR", t.toString())
+                        btnEdit.isEnabled = true
+                        loadingIndicator.visibility = View.GONE
                     }
                 })
         }
@@ -208,9 +231,15 @@ class MenuEditFragment : Fragment() {
             val selectedImageUri: Uri = data.data ?: return
             val filePath = getRealPathFromURI(selectedImageUri)
             if (filePath.isNotEmpty()) {
-                imageFile = File(filePath)
-                Glide.with(requireContext()).load(selectedImageUri)
-                    .apply(RequestOptions().centerCrop()).into(etGambarMenu)
+                val resizedImageFile = resizeImageFile(filePath)
+                if (resizedImageFile != null) {
+                    imageFile = resizedImageFile
+                    Glide.with(requireContext()).load(selectedImageUri)
+                        .apply(RequestOptions().centerCrop()).into(etGambarMenu)
+                } else {
+                    Toast.makeText(requireContext(), "Error in resizing image", Toast.LENGTH_SHORT)
+                        .show()
+                }
             } else {
                 Toast.makeText(requireContext(), "Error in getting image", Toast.LENGTH_SHORT)
                     .show()
@@ -286,5 +315,55 @@ class MenuEditFragment : Fragment() {
         })
     }
 
+
+    private fun resizeImageFile(filePath: String): File? {
+        try {
+            val originalFile = File(filePath)
+            val originalBitmap = BitmapFactory.decodeFile(originalFile.absolutePath)
+
+            // Define maximum dimensions (you can adjust these as needed)
+            val maxWidth = 1024
+            val maxHeight = 1024
+
+            var width = originalBitmap.width
+            var height = originalBitmap.height
+
+            // Calculate the new dimensions while maintaining aspect ratio
+            if (width > height) {
+                if (width > maxWidth) {
+                    height = (height * (maxWidth.toFloat() / width)).toInt()
+                    width = maxWidth
+                }
+            } else {
+                if (height > maxHeight) {
+                    width = (width * (maxHeight.toFloat() / height)).toInt()
+                    height = maxHeight
+                }
+            }
+
+            // Resize the bitmap
+            val resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, true)
+
+            // Compress the bitmap to a file
+            val outputFile = File(requireContext().cacheDir, "resized_image.jpg")
+            var outputStream = FileOutputStream(outputFile)
+            var compressQuality = 100
+            var fileSize: Long
+
+            do {
+                outputStream = FileOutputStream(outputFile)
+                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, outputStream)
+                outputStream.flush()
+                outputStream.close()
+                fileSize = outputFile.length()
+                compressQuality -= 5
+            } while (fileSize > 2 * 1024 * 1024 && compressQuality > 5) // 2MB limit
+
+            return outputFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
 
 }
