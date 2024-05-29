@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bdi.kasiran.OrderFragment.Companion.CART_DATA
 import com.bdi.kasiran.OrderFragment.Companion.TOTAL
 import com.bdi.kasiran.adapter.ConfirmOrderAdapter
-import com.bdi.kasiran.adapter.OrderAdapter
 import com.bdi.kasiran.databinding.FragmentConfirmOrderBinding
 import com.bdi.kasiran.network.BaseRetrofit
 import com.bdi.kasiran.response.cart.Cart
@@ -29,12 +28,12 @@ import com.bdi.kasiran.response.order.Order
 import com.bdi.kasiran.response.order.OrderItem
 import com.bdi.kasiran.response.order.OrderResponse
 import com.bdi.kasiran.response.order.OrderStore
-import java.text.NumberFormat
-import java.util.Locale
 import com.bdi.kasiran.ui.auth.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.NumberFormat
+import java.util.Locale
 
 
 class ConfirmOrderFragment : Fragment() {
@@ -139,10 +138,10 @@ class ConfirmOrderFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Proses Order")
             .setMessage("Apakah Anda yakin ingin proses order ini??")
-            .setPositiveButton("Yes") { dialog, which ->
+            .setPositiveButton("Ya") { dialog, which ->
                 onSubmit()
             }
-            .setNegativeButton("No") { dialog, which ->
+            .setNegativeButton("Tidak") { dialog, which ->
                 dialog.dismiss()
             }
             .create()

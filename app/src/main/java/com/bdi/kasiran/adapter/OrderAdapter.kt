@@ -23,7 +23,8 @@ import java.lang.reflect.Type
 import java.text.NumberFormat
 import java.util.Locale
 
-class OrderAdapter(val context: Context, val listmenu: List<Menu>) : RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
+class OrderAdapter(val context: Context, val listmenu: List<Menu>) :
+    RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
 
     private val api by lazy { BaseRetrofit().endpoint }
     var callBackInterface: CallBackInterface? = null
@@ -31,7 +32,8 @@ class OrderAdapter(val context: Context, val listmenu: List<Menu>) : RecyclerVie
     var cart: ArrayList<Cart> = arrayListOf<Cart>()
     private val itemQtyMap: MutableMap<String, Int> = mutableMapOf()
 
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("OrderPrefs", Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("OrderPrefs", Context.MODE_PRIVATE)
     private val gson = Gson()
 
     init {
@@ -76,15 +78,8 @@ class OrderAdapter(val context: Context, val listmenu: List<Menu>) : RecyclerVie
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(holder.txtGambar)
 
-        // Set the saved quantity
         val savedQty = itemQtyMap[menu.menu_uuid] ?: 0
         holder.txtQty.text = savedQty.toString()
-
-//        holder.itemView.setOnClickListener {
-//            val bundle = Bundle()
-//            bundle.putParcelable("menu", menu)
-//            it.findNavController().navigate(R.id.menuDetailFragment, bundle)
-//        }
 
         holder.btnPlus.setOnClickListener {
             val currentQty = holder.txtQty.text.toString().toInt()
@@ -101,7 +96,8 @@ class OrderAdapter(val context: Context, val listmenu: List<Menu>) : RecyclerVie
                 if (index != -1) {
                     cart[index].qty += 1
                 } else {
-                    val itemCart = Cart(menu.menu_uuid, menu.menu_name, menu.menu_price.toDouble(), 1)
+                    val itemCart =
+                        Cart(menu.menu_uuid, menu.menu_name, menu.menu_price.toDouble(), 1)
                     cart.add(itemCart)
                 }
 
@@ -164,6 +160,7 @@ class OrderAdapter(val context: Context, val listmenu: List<Menu>) : RecyclerVie
         editor.putString("itemQtyMap", "")
         editor.apply()
     }
+
     fun clearItemQtyMap() {
         itemQtyMap.clear()
         saveData() // Simpan perubahan ke SharedPreferences

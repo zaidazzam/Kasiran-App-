@@ -3,7 +3,6 @@ package com.bdi.kasiran
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +22,8 @@ class MenuFragment : Fragment() {
     private val api by lazy { BaseRetrofit().endpoint }
     private val viewModel: OrderViewModel by viewModels()
     private lateinit var binding: FragmentMenuBinding
+    private lateinit var loadingIndicator: View
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +35,7 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadingIndicator = view.findViewById(R.id.loading_indicator)
 
         viewModel.getMenuData(api).observe(viewLifecycleOwner) { data ->
             setItemData(data)
@@ -55,6 +57,7 @@ class MenuFragment : Fragment() {
             override fun onDelete(item: Menu, position: Int) {
                 viewModel.deleteMenu(api, item.menu_uuid).observe(viewLifecycleOwner) {
                     if (it.success) {
+                        loadingIndicator.visibility = View.GONE
                         Toast.makeText(
                             requireContext(),
                             "Delete ${item.menu_name} Success",

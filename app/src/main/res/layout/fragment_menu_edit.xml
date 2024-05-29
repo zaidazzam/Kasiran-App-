@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:orientation="vertical"
     tools:context=".ui.menu.MenuEditFragment">
@@ -146,8 +147,24 @@
                     android:textAllCaps="false"
                     android:textStyle="bold" />
             </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/loading_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:cardCornerRadius="36dp">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp" />
+
+            </androidx.cardview.widget.CardView>
+
 
         </LinearLayout>
+
     </ScrollView>
 
 

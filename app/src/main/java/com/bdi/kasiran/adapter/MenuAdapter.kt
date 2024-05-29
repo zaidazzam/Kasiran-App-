@@ -1,6 +1,6 @@
 package com.bdi.kasiran.adapter
 
-import android.content.Context
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.R
@@ -38,7 +37,7 @@ class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItem
         val menu = listmenu[position]
         val localeID = Locale("in", "ID")
         val numberFormat = NumberFormat.getCurrencyInstance(localeID)
-        numberFormat.maximumFractionDigits = 0 // Menggunakan setter untuk maximumFractionDigits
+        numberFormat.maximumFractionDigits = 0
         holder.txtNamaMenu.text = menu.menu_name
         holder.txtHargaMenu.text = numberFormat.format(menu.menu_price.toDouble()).toString()
         holder.txtStok.text = menu.menu_qty
@@ -50,42 +49,48 @@ class MenuAdapter(private var listmenu: List<Menu>, private val listener: OnItem
             .transition(DrawableTransitionOptions.withCrossFade()) // Smooth transition
             .into(holder.txtGambar)
 
-        holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putParcelable("menu", menu)
-            it.findNavController().navigate(R.id.menuDetailFragment, bundle)
-        }
+//        holder.itemView.setOnClickListener {
+//            val bundle = Bundle()
+//            bundle.putParcelable("menu", menu)
+//            it.findNavController().navigate(R.id.menuDetailFragment, bundle)
+//        }
 
         holder.btnDelete.setOnClickListener {
-            showDeleteConfirmationDialog(menu, position, holder.itemView.context) // Memanggil fungsi dengan menyertakan context
+            showDeleteConfirmationDialog(holder.itemView, menu, position)
+        }
+
+        holder.btnEdit.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("menuUuid", menu.menu_uuid)
+            }
+            holder.itemView.findNavController().navigate(R.id.action_menuFragment_to_menuEditFragment, bundle)
         }
     }
 
-    private fun showDeleteConfirmationDialog(menu: Menu, position: Int, context: Context) {
-        AlertDialog.Builder(context)
-            .setTitle("Delete Menu")
-            .setMessage("Apakah kamu yakin ingin hapus menu ini??")
-            .setPositiveButton("Yes") { dialog, which ->
+    private fun showDeleteConfirmationDialog(view: View, menu: Menu, position: Int) {
+        AlertDialog.Builder(view.context)
+            .setTitle("Konfirmasi Hapus")
+            .setMessage("Apakah Anda yakin ingin menghapus menu ini?")
+            .setPositiveButton("Ya") { dialog, _ ->
                 listener.onDelete(menu, position)
-            }
-            .setNegativeButton("No") { dialog, which ->
                 dialog.dismiss()
             }
-            .create()
+            .setNegativeButton("Tidak") { dialog, _ ->
+                dialog.dismiss()
+            }
             .show()
     }
 
-
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtNamaMenu = itemView.findViewById<TextView>(R.id.txt_nama)
-        val txtHargaMenu = itemView.findViewById<TextView>(R.id.txt_harga)
-        val txtStok = itemView.findViewById<TextView>(R.id.txt_stok)
-        val txtGambar = itemView.findViewById<ImageView>(R.id.img_gambar)
-        val btnDelete = itemView.findViewById<ImageButton>(R.id.btnDeleteProduk)
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val txtNamaMenu: TextView = itemView.findViewById(R.id.txt_nama)
+        val txtHargaMenu: TextView = itemView.findViewById(R.id.txt_harga)
+        val txtStok: TextView = itemView.findViewById(R.id.txt_stok)
+        val txtGambar: ImageView = itemView.findViewById(R.id.img_gambar)
+        val btnDelete: ImageButton = itemView.findViewById(R.id.btnDeleteProduk)
+        val btnEdit: ImageButton = itemView.findViewById(R.id.btnEditProduk)
     }
 
     interface OnItemClickListener {
         fun onDelete(item: Menu, position: Int)
     }
 }
-

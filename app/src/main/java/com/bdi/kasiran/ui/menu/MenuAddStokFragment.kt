@@ -1,5 +1,6 @@
 package com.bdi.kasiran.ui.menu
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -55,11 +56,25 @@ class MenuAddStokFragment : Fragment() {
         btnSimpan.setOnClickListener {
             val stokBaru = edtStok.text.toString().trim()
             if (stokBaru.isNotEmpty()) {
-                updateStok(stokBaru)
+                showConfirmationDialog(stokBaru)
             } else {
                 Toast.makeText(requireContext(), "Harap isi jumlah stok", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun showConfirmationDialog(stokBaru: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Konfirmasi Tambah Stok")
+            .setMessage("Apakah Anda yakin ingin menambah stok menu ini?")
+            .setPositiveButton("Ya") { dialog, _ ->
+                updateStok(stokBaru)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Tidak") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun fetchDataMenu(uuid: String) {
@@ -85,7 +100,6 @@ class MenuAddStokFragment : Fragment() {
             }
         })
     }
-
 
     private fun updateStok(stokMenu: String) {
         val token = LoginActivity.sessionManager.getString("TOKEN")

@@ -59,11 +59,11 @@ interface ApiEndpoint {
         @Header("Authorization") token: String,
         @Path("id") id: String,
         @Part("menu_name") menuName: RequestBody,
-        @Part("menu_price") menuPrice: RequestBody,
+        @Part("menu_price") menuPrice: Int,
         @Part("menu_qty") menuStok: RequestBody,
         @Part("menu_type") menuType: RequestBody,
         @Part("menu_desc") menuDecs: RequestBody,
-        @Part menuImage: MultipartBody.Part // Gunakan anotasi @Part untuk pengunggahan berkas
+        @Part menuImage: MultipartBody.Part? // Gunakan anotasi @Part untuk pengunggahan berkas
     ): Call<MenuResponsePost>
 
     @POST("order")
