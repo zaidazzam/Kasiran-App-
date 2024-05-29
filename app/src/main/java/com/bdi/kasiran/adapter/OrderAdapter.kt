@@ -72,7 +72,7 @@ class OrderAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<OrderAdapter.
                 }
             }
 
-            callBackInterface?.passResultCallback(total.toString(), cart)
+            callBackInterface?.passResultCallback(total.toString(), cart, menu.branch)
         }
 
         holder.btnMinus.setOnClickListener {
@@ -94,7 +94,7 @@ class OrderAdapter(val listmenu: List<Menu>): RecyclerView.Adapter<OrderAdapter.
                 }
             }
 
-            callBackInterface?.passResultCallback(total.toString(), cart)
+            callBackInterface?.passResultCallback(total.toString(), cart, menu.branch)
         }
 
 

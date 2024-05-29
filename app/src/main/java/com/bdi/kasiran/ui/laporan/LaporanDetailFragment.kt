@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.R
 import com.bdi.kasiran.adapter.LaporanDetailAdapter
 import com.bdi.kasiran.network.BaseRetrofit
+import com.bdi.kasiran.response.menu.Branch
 import com.bdi.kasiran.response.order.Order
 import com.bdi.kasiran.response.order.OrderCompleteResponse
 import com.bdi.kasiran.ui.auth.LoginActivity
@@ -37,15 +38,17 @@ class LaporanDetailFragment : Fragment() {
 
         val args = arguments
         var order: Order? = null
+        var branch: Branch? = null
 
         if (args != null) {
             order = args.getParcelable("transaksi")
+            branch = args.getParcelable("BRANCH")
             if (order != null) {
                 displayOrderDetails(view, order)
             }
         }
 
-        setupButtons(view, order)
+        setupButtons(view, order, branch)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.rcv_detail_Laporan)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -65,7 +68,7 @@ class LaporanDetailFragment : Fragment() {
         view.findViewById<TextView>(R.id.hasil_order_note).text = order.order_note
     }
 
-    private fun setupButtons(view: View, order: Order?) {
+    private fun setupButtons(view: View, order: Order?, branch: Branch?) {
         view.findViewById<Button>(R.id.btn_complete).apply {
             visibility = if (order?.status != "pending") View.GONE else View.VISIBLE
             setOnClickListener {
@@ -84,7 +87,11 @@ class LaporanDetailFragment : Fragment() {
         }
         view.findViewById<Button>(R.id.btn_download).apply {
             order?.let {
-                setOnClickListener { printData(order) }
+                setOnClickListener {
+                    if (branch != null) {
+                        printData(order, branch)
+                    }
+                }
             }
         }
     }
@@ -173,16 +180,16 @@ class LaporanDetailFragment : Fragment() {
         }
     }
 
-    private fun printData(data: Order) {
-//        var listOrder = ""
-//        for (i in 0 until data.order_list.size) {
-//            val total = data.order_list[i].menu_qty.toInt() * data.order_list[i].menu_price
-//            listOrder += "[L]<b>${data.order_list[i].menu_name}</b>\n" +
-//                    "[L]${data.order_list[i].menu_price} x${data.order_list[i].menu_qty} pcs[R]" +
-//                    total + "\n"
-//        }
-//
-//        try {
+    private fun printData(data: Order, branch: Branch) {
+        var listOrder = ""
+        for (i in 0 until data.order_list.size) {
+            val total = data.order_list[i].menu_qty.toInt() * data.order_list[i].menu_price
+            listOrder += "[L]<b>${data.order_list[i].menu_name}</b>\n" +
+                    "[L]${data.order_list[i].menu_price} x${data.order_list[i].menu_qty} pcs[R]" +
+                    total + "\n"
+        }
+
+        try {
 //            val connections: BluetoothConnection =
 //                BluetoothPrintersConnections.selectFirstPaired()!!
 //            val printer = EscPosPrinter(
@@ -191,27 +198,30 @@ class LaporanDetailFragment : Fragment() {
 //                printerWidthMM = 48f,
 //                printerNbrCharactersPerLine = 32
 //            )
-//            val text =
-//                "[c]<b> Warung Kilat </b>\n" +
-//                        "[C].J. Samgkali No.21\n" +
-//                        "[L]Kasir : Lestyo\n" +
-//                        "[L]Tanggal : 10 Agustus 2023\n" +
-//                        "================\n" +
-//                        listOrder +
-//                        "[C]----------------\n" +
-//                        "[L]<b>Total Amount</b>[R]" + data.total_transaksi + "\n" +
-//                        "[C]----------------\n" +
-//                        "[C]Terima Kasih Sudah Berbelanja\n"
-//
+            val text =
+                "[c]<b> ${branch.branch_name} </b>\n" +
+                        "[C]${branch.branch_address}\n" +
+                        "[C]${branch.branch_phone}\n" +
+                        "[C]${branch.branch_email}\n" +
+                        "[L]Kasir : Lestyo\n" +
+                        "[L]Tanggal : 10 Agustus 2023\n" +
+                        "================\n" +
+                        listOrder +
+                        "[C]----------------\n" +
+                        "[L]<b>Diskon</b>[R] ${data.total_diskon}\n" +
+                        "[L]<b>Total Amount</b>[R] ${data.total_transaksi}\n" +
+                        "[C]----------------\n" +
+                        "[C]Terima Kasih Sudah Berbelanja\n"
+
 //            printer.printFormattedText(text)
 //            connections.disconnect()
-//        } catch (e: Exception) {
-//            println("Message BDI POS :")
-//            e.printStackTrace()
-//            val msg = "Perangkat tidak terhubung dengan thermal printer, " +
-//                    "silahkan hubungkan melalui bluetooth"
-//            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-//        }
+        } catch (e: Exception) {
+            println("Message BDI POS :")
+            e.printStackTrace()
+            val msg = "Perangkat tidak terhubung dengan thermal printer, " +
+                    "silahkan hubungkan melalui bluetooth"
+            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

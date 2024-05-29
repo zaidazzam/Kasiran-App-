@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bdi.kasiran.adapter.OrderAdapter
 import com.bdi.kasiran.network.BaseRetrofit
 import com.bdi.kasiran.response.cart.Cart
+import com.bdi.kasiran.response.menu.Branch
 import com.bdi.kasiran.response.menu.Menu
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -31,6 +32,7 @@ class OrderFragment : Fragment() {
 
     val totalPrice = MutableLiveData<String>()
     val cartData = MutableLiveData<ArrayList<Cart>>()
+    val branchData = MutableLiveData<Branch>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +64,9 @@ class OrderFragment : Fragment() {
             btnBayar.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putParcelableArrayList(CART_DATA, data)
+                branchData.observe(viewLifecycleOwner) { branch ->
+                    if (branchData.value != null) bundle.putParcelable("BRANCH", branch)
+                }
                 bundle.putString(TOTAL, totalBayar)
 
                 findNavController().navigate(R.id.confirmOrderFragment, bundle)
@@ -77,9 +82,10 @@ class OrderFragment : Fragment() {
         rvTransaksi.adapter = rvAdapter
 
         rvAdapter.callBackInterface = object : CallBackInterface {
-            override fun passResultCallback(total: String, cart: ArrayList<Cart>) {
+            override fun passResultCallback(total: String, cart: ArrayList<Cart>, branch: Branch) {
                 totalPrice.value = total
                 cartData.value = cart
+                branchData.value = branch
             }
 
         }

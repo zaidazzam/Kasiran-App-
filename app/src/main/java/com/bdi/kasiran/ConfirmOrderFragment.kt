@@ -1,5 +1,6 @@
 package com.bdi.kasiran
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -22,6 +24,7 @@ import com.bdi.kasiran.databinding.FragmentConfirmOrderBinding
 import com.bdi.kasiran.network.BaseRetrofit
 import com.bdi.kasiran.response.cart.Cart
 import com.bdi.kasiran.response.diskon.Diskon
+import com.bdi.kasiran.response.menu.Branch
 import com.bdi.kasiran.response.order.Order
 import com.bdi.kasiran.response.order.OrderItem
 import com.bdi.kasiran.response.order.OrderResponse
@@ -37,6 +40,7 @@ class ConfirmOrderFragment : Fragment() {
     private val viewModel: ConfirmOrderViewModel by viewModels()
     private lateinit var binding: FragmentConfirmOrderBinding
     private lateinit var cartData: List<Cart>
+    private lateinit var branchData: Branch
     private var discountNominal = 0.0
     private var total = 0.0
 
@@ -48,12 +52,14 @@ class ConfirmOrderFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val bundle = arguments
         if (bundle != null) {
             cartData = bundle.getParcelableArrayList<Cart>(CART_DATA)!!.toList()
+            branchData = bundle.getParcelable("BRANCH", Branch::class.java)!!
             total = bundle.getString(TOTAL)!!.toDouble()
             setItemData(cartData.toList())
         }
@@ -149,6 +155,7 @@ class ConfirmOrderFragment : Fragment() {
                     if (order != null) {
                         val bundle = Bundle().apply {
                             putParcelable("transaksi", order)
+                            putParcelable("BRANCH", branchData)
                         }
                         val navOptions = NavOptions.Builder()
                             .setPopUpTo(R.id.confirmOrderFragment, true)
