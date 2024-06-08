@@ -1,8 +1,9 @@
 package com.bdi.kasiran.ui.menu
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,6 +17,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -27,11 +29,14 @@ import com.bdi.kasiran.ui.auth.LoginActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
 import java.net.URLConnection
 
 class MenuEditFragment : Fragment() {
@@ -42,8 +47,9 @@ class MenuEditFragment : Fragment() {
 
     // Menambahkan variabel untuk menyimpan menu_uuid yang akan diupdate
     private var menuUuid: String = ""
-    private lateinit var loadingIndicator: View
 
+    private lateinit var btnEdit: Button
+    private lateinit var loadingIndicator: CardView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,9 +58,9 @@ class MenuEditFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_menu_edit, container, false)
         menuUuid = args.menuUuid
 
-        loadingIndicator = view.findViewById(R.id.loading_indicator)
         // Initialize views
-        val btnEdit = view.findViewById<Button>(R.id.btn_simpan)
+        loadingIndicator = view.findViewById(R.id.loadingIndicator)
+        btnEdit = view.findViewById(R.id.btn_simpan)
         val btnBatal = view.findViewById<Button>(R.id.btn_batal)
         val etNamaMenu = view.findViewById<EditText>(R.id.edt_nama)
         val etHargaMenu = view.findViewById<EditText>(R.id.edt_harga)
@@ -76,6 +82,7 @@ class MenuEditFragment : Fragment() {
         )
 
         // Ambil menu_uuid dari bundle atau argumen jika fragment ini dibuka untuk edit
+//        return inflater.inflate(R.layout.fragment_menu_edit, container, false)
         return view
     }
 
@@ -113,7 +120,7 @@ class MenuEditFragment : Fragment() {
             Log.d("MenuEdit", "$namaMenu - $hargaMenu - $stokMenu - $typeMenu - $descMenu")
 
             if (validateInput(namaMenu, hargaMenu, stokMenu, typeMenu, descMenu)) {
-                showConfirmationDialog(namaMenu, hargaMenu, stokMenu, typeMenu, descMenu)
+                editMenu(namaMenu, hargaMenu, stokMenu, typeMenu, descMenu)
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -126,26 +133,6 @@ class MenuEditFragment : Fragment() {
         etGambarMenu.setOnClickListener {
             selectImage()
         }
-    }
-
-    private fun showConfirmationDialog(
-        namaMenu: String,
-        hargaMenu: String,
-        stokMenu: String,
-        typeMenu: String,
-        descMenu: String
-    ) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Konfirmasi")
-            .setMessage("Apakah anda yakin ingin ubah data menu?")
-            .setPositiveButton("Ya") { dialog, _ ->
-                editMenu(namaMenu, hargaMenu, stokMenu, typeMenu, descMenu)
-                dialog.dismiss()
-            }
-            .setNegativeButton("Tidak") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
     }
 
     private fun validateInput(
@@ -166,17 +153,28 @@ class MenuEditFragment : Fragment() {
         typeMenu: String,
         descMenu: String
     ) {
+        btnEdit.isEnabled = false
+        loadingIndicator.visibility = View.VISIBLE
+
         val token = LoginActivity.sessionManager.getString("TOKEN")
 
         token?.let { authToken ->
+            var imagePart: MultipartBody.Part? = null
+            if (imageFile != null) {
+                val imageRequestBody = imageFile!!.asRequestBody("image/*".toMediaType())
+                imagePart =
+                    MultipartBody.Part.createFormData(
+                        "menu_image",
+                        imageFile!!.name,
+                        imageRequestBody
+                    )
+            }
+
             val namaMenuRequestBody = namaMenu.toRequestBody("text/plain".toMediaType())
             val hargaMenuRequestBody = hargaMenu.toInt()
             val stokMenuRequestBody = stokMenu.toRequestBody("text/plain".toMediaType())
             val typeMenuRequestBody = typeMenu.toRequestBody("text/plain".toMediaType())
             val descMenuRequestBody = descMenu.toRequestBody("text/plain".toMediaType())
-
-            // Menampilkan indikator loading sebelum mengirim permintaan
-            loadingIndicator.visibility = View.VISIBLE
 
             api.editMenu(
                 "Bearer $authToken",
@@ -186,38 +184,38 @@ class MenuEditFragment : Fragment() {
                 stokMenuRequestBody,
                 typeMenuRequestBody,
                 descMenuRequestBody,
-                null
-            ).enqueue(object : Callback<MenuResponsePost> {
-                override fun onResponse(
-                    call: Call<MenuResponsePost>,
-                    response: Response<MenuResponsePost>
-                ) {
-                    // Sembunyikan indikator loading setelah mendapatkan respons
-                    loadingIndicator.visibility = View.GONE
+                imagePart
+            )
+                .enqueue(object : Callback<MenuResponsePost> {
+                    override fun onResponse(
+                        call: Call<MenuResponsePost>,
+                        response: Response<MenuResponsePost>
+                    ) {
+                        if (response.isSuccessful) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Edit menu berhasil",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            findNavController().navigate(R.id.menuFragment)
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Gagal mengedit menu",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
-                    if (response.isSuccessful) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Edit menu berhasil",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        findNavController().navigate(R.id.menuFragment)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Gagal mengedit menu",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        btnEdit.isEnabled = true
+                        loadingIndicator.visibility = View.GONE
                     }
-                }
 
-                override fun onFailure(call: Call<MenuResponsePost>, t: Throwable) {
-                    // Sembunyikan indikator loading ketika terjadi kegagalan
-                    loadingIndicator.visibility = View.GONE
-
-                    Log.e("ERROR", t.toString())
-                }
-            })
+                    override fun onFailure(call: Call<MenuResponsePost>, t: Throwable) {
+                        Log.e("ERROR", t.toString())
+                        btnEdit.isEnabled = true
+                        loadingIndicator.visibility = View.GONE
+                    }
+                })
         }
     }
 
@@ -233,9 +231,15 @@ class MenuEditFragment : Fragment() {
             val selectedImageUri: Uri = data.data ?: return
             val filePath = getRealPathFromURI(selectedImageUri)
             if (filePath.isNotEmpty()) {
-                imageFile = File(filePath)
-                Glide.with(requireContext()).load(selectedImageUri)
-                    .apply(RequestOptions().centerCrop()).into(etGambarMenu)
+                val resizedImageFile = resizeImageFile(filePath)
+                if (resizedImageFile != null) {
+                    imageFile = resizedImageFile
+                    Glide.with(requireContext()).load(selectedImageUri)
+                        .apply(RequestOptions().centerCrop()).into(etGambarMenu)
+                } else {
+                    Toast.makeText(requireContext(), "Error in resizing image", Toast.LENGTH_SHORT)
+                        .show()
+                }
             } else {
                 Toast.makeText(requireContext(), "Error in getting image", Toast.LENGTH_SHORT)
                     .show()
@@ -267,7 +271,6 @@ class MenuEditFragment : Fragment() {
 
     private fun fetchDataMenu(uuid: String) {
         val token = LoginActivity.sessionManager.getString("TOKEN")
-        loadingIndicator.visibility = View.VISIBLE
 
         api.getMenuData("Bearer $token").enqueue(object : Callback<MenuResponse> {
             override fun onResponse(call: Call<MenuResponse>, response: Response<MenuResponse>) {
@@ -278,7 +281,6 @@ class MenuEditFragment : Fragment() {
                         view?.findViewById<EditText>(R.id.edt_harga)?.setText(price.toInt().toString())
                         view?.findViewById<EditText>(R.id.edt_stok)?.setText(menu.menu_qty)
                         view?.findViewById<EditText>(R.id.edt_decs)?.setText(menu.menu_desc)
-                        loadingIndicator.visibility = View.GONE
 
                         // Set the image using Glide
                         val imageUrl = menu.menu_image
@@ -308,10 +310,60 @@ class MenuEditFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MenuResponse>, t: Throwable) {
-                loadingIndicator.visibility = View.GONE
                 Log.e("Menu Edit ", "Error fetching menu data: ${t.message}")
             }
         })
     }
-}
 
+
+    private fun resizeImageFile(filePath: String): File? {
+        try {
+            val originalFile = File(filePath)
+            val originalBitmap = BitmapFactory.decodeFile(originalFile.absolutePath)
+
+            // Define maximum dimensions (you can adjust these as needed)
+            val maxWidth = 1024
+            val maxHeight = 1024
+
+            var width = originalBitmap.width
+            var height = originalBitmap.height
+
+            // Calculate the new dimensions while maintaining aspect ratio
+            if (width > height) {
+                if (width > maxWidth) {
+                    height = (height * (maxWidth.toFloat() / width)).toInt()
+                    width = maxWidth
+                }
+            } else {
+                if (height > maxHeight) {
+                    width = (width * (maxHeight.toFloat() / height)).toInt()
+                    height = maxHeight
+                }
+            }
+
+            // Resize the bitmap
+            val resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, true)
+
+            // Compress the bitmap to a file
+            val outputFile = File(requireContext().cacheDir, "resized_image.jpg")
+            var outputStream = FileOutputStream(outputFile)
+            var compressQuality = 100
+            var fileSize: Long
+
+            do {
+                outputStream = FileOutputStream(outputFile)
+                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, outputStream)
+                outputStream.flush()
+                outputStream.close()
+                fileSize = outputFile.length()
+                compressQuality -= 5
+            } while (fileSize > 2 * 1024 * 1024 && compressQuality > 5) // 2MB limit
+
+            return outputFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
+
+}
