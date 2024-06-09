@@ -15,13 +15,13 @@ class BaseRetrofit {
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(interceptor)
-                .readTimeout(2, TimeUnit.MINUTES)
-                .connectTimeout(2, TimeUnit.MINUTES)
-                .writeTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://be.pos-kasiran.my.id/")
+                .baseUrl("http://pos-kasiran-be.kamojang.id/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

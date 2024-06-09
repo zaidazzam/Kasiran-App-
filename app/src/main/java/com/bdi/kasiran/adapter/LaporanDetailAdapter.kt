@@ -49,7 +49,7 @@ class LaporanDetailAdapter(private val listOrderDetail: List<OrderDetail>) :
             menuQty.text = "${orderDetail.menu_qty} Item"
 
             // Base URL untuk gambar
-            val baseUrl = "https://be.pos-kasiran.my.id/order" // Ganti dengan base URL server Anda
+            val baseUrl = "http://pos-kasiran-be.kamojang.id/order" // Ganti dengan base URL server Anda
 
             // URL lengkap gambar
             val imageUrl = baseUrl + orderDetail.menu_image

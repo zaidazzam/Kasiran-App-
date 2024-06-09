@@ -128,7 +128,7 @@ class LaporanDetailFragment : Fragment() {
                                 "Order completed successfully!",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            findNavController().navigate(R.id.laporanFragment)  // Assuming you want to navigate away
+                            findNavController().navigate(R.id.menuOrderFragment)  // Assuming you want to navigate away
                         } else {
                             Toast.makeText(
                                 requireContext(),
@@ -171,7 +171,7 @@ class LaporanDetailFragment : Fragment() {
                     if (response.isSuccessful) {
                         Toast.makeText(requireContext(), "Order cancelled!", Toast.LENGTH_SHORT)
                             .show()
-                        findNavController().navigate(R.id.laporanFragment)  // Assuming you want to navigate away
+                        findNavController().navigate(R.id.menuOrderFragment)  // Assuming you want to navigate away
                     } else {
                         Toast.makeText(
                             requireContext(),
@@ -278,4 +278,3 @@ class LaporanDetailFragment : Fragment() {
     }
 
 }
-
